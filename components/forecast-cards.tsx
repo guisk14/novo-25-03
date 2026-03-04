@@ -90,7 +90,7 @@ interface MetricCardProps {
 function MetricCard({ icon, label, value, unit, subtitle, accentColor, glowBg }: MetricCardProps) {
   return (
     <div
-      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl p-5 sm:p-6 min-h-[150px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1"
+      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-6 min-h-[120px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1"
       style={{
         background: "linear-gradient(180deg, #1c2a3a 0%, #16212d 100%)",
         borderTop: `3px solid ${accentColor}`,
@@ -109,28 +109,28 @@ function MetricCard({ icon, label, value, unit, subtitle, accentColor, glowBg }:
       />
 
       {/* Icon */}
-      <div className="relative mb-2 sm:mb-3" style={{ color: accentColor }}>
+      <div className="relative mb-1 sm:mb-3" style={{ color: accentColor }}>
         {icon}
       </div>
 
       {/* Label */}
       <span
-        className="relative text-[0.6rem] sm:text-[0.65rem] font-semibold tracking-[0.15em] uppercase"
+        className="relative text-[0.55rem] sm:text-[0.65rem] font-semibold tracking-[0.12em] sm:tracking-[0.15em] uppercase"
         style={{ color: "rgba(139,164,189,0.7)" }}
       >
         {label}
       </span>
 
       {/* Value */}
-      <div className="relative mt-1 sm:mt-2 flex items-baseline gap-1">
+      <div className="relative mt-0.5 sm:mt-2 flex items-baseline gap-0.5 sm:gap-1">
         <span
-          className="text-3xl sm:text-[2.6rem] font-bold leading-none text-foreground"
+          className="text-2xl sm:text-[2.6rem] font-bold leading-none text-foreground"
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {value}
         </span>
         {unit && (
-          <span className="text-base sm:text-lg font-medium text-muted-foreground opacity-60">
+          <span className="text-sm sm:text-lg font-medium text-muted-foreground opacity-60">
             {unit}
           </span>
         )}
@@ -138,7 +138,7 @@ function MetricCard({ icon, label, value, unit, subtitle, accentColor, glowBg }:
 
       {/* Subtitle */}
       {subtitle && (
-        <span className="relative mt-1.5 text-[0.65rem] sm:text-xs font-medium text-muted-foreground opacity-70">
+        <span className="relative mt-1 sm:mt-1.5 text-[0.55rem] sm:text-xs font-medium text-muted-foreground opacity-70">
           {subtitle}
         </span>
       )}
@@ -164,7 +164,7 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <MetricCard
-        icon={<WaveIcon className="h-7 w-7 sm:h-8 sm:w-8" />}
+        icon={<WaveIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
         label={CARD_THEMES.altura.label}
         value={formatNum(data.currentHeight, 1)}
         unit="m"
@@ -173,7 +173,7 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
       />
 
       <MetricCard
-        icon={<TimerIcon className="h-7 w-7 sm:h-8 sm:w-8" />}
+        icon={<TimerIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
         label={CARD_THEMES.periodo.label}
         value={formatNum(data.currentPeriod, 0)}
         unit="s"
@@ -182,7 +182,7 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
       />
 
       <MetricCard
-        icon={<CompassIcon className="h-7 w-7 sm:h-8 sm:w-8" rotation={data.currentDirection} />}
+        icon={<CompassIcon className="h-5 w-5 sm:h-8 sm:w-8" rotation={data.currentDirection} />}
         label={CARD_THEMES.direcao.label}
         value={data.currentDirectionCompass}
         accentColor={CARD_THEMES.direcao.accent}
@@ -190,7 +190,7 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
       />
 
       <MetricCard
-        icon={<WindIcon className="h-7 w-7 sm:h-8 sm:w-8" />}
+        icon={<WindIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
         label={CARD_THEMES.vento.label}
         value={`${Math.round(data.currentWindSpeed)}`}
         unit="km/h"
