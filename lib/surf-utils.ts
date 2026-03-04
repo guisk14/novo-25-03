@@ -190,13 +190,14 @@ export async function fetchForecast(beach: Beach): Promise<ForecastData> {
     })
   }
 
-  // Wind table data
+  // Wind table data (00:00 - 23:00 do dia atual)
   const windTableData: ForecastData["windTableData"] = []
-  const nowMs = Date.now()
-  const sinceMs = nowMs - 24 * 60 * 60 * 1000
+  const today = new Date()
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0).getTime()
+  const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59).getTime()
   for (let i = 0; i < weather.hourly.time.length; i += 3) {
     const tMs = safeParseDate(weather.hourly.time[i]).getTime()
-    if (tMs < sinceMs || tMs > nowMs + 24 * 60 * 60 * 1000) continue
+    if (tMs < todayStart || tMs > todayEnd) continue
     const d = safeParseDate(weather.hourly.time[i])
     const day = d.toLocaleDateString("pt-BR", { weekday: "short" })
     const hh = String(d.getHours()).padStart(2, "0") + ":00"
