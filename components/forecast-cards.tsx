@@ -97,7 +97,18 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
         </span>
       </div>
 
-      {/* Vento */}
+      {/* Dir. Onda */}
+      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#1e2a3a] p-5 min-h-[140px] transition-all hover:-translate-y-1 hover:bg-[#243345]">
+        <ArrowDownIcon className="h-6 w-6 text-[#5b9ec9] mb-2" style={{ transform: `rotate(${data.currentDirection}deg)` }} />
+        <span className="text-xs font-medium tracking-wide text-[#8ba4bd] uppercase">
+          Dir. Onda
+        </span>
+        <span className="mt-1 text-3xl font-extrabold text-foreground leading-none">
+          {data.currentDirectionCompass}
+        </span>
+      </div>
+
+      {/* Vento + Rajada */}
       <div className="flex flex-col items-center justify-center rounded-2xl bg-[#1e2a3a] p-5 min-h-[140px] transition-all hover:-translate-y-1 hover:bg-[#243345]">
         <WindIcon className="h-6 w-6 text-[#5b9ec9] mb-2" />
         <span className="text-xs font-medium tracking-wide text-[#8ba4bd] uppercase">
@@ -106,22 +117,8 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
         <span className="mt-1 text-3xl font-extrabold text-foreground leading-none">
           {Math.round(data.currentWindSpeed)} km/h
         </span>
-        <span className="mt-1 text-sm font-medium text-[#8ba4bd]">
-          {windDir}
-        </span>
-      </div>
-
-      {/* Proxima Mare Baixa */}
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#1e2a3a] p-5 min-h-[140px] transition-all hover:-translate-y-1 hover:bg-[#243345]">
-        <ArrowDownIcon className="h-6 w-6 text-[#4db8a5] mb-2" />
-        <span className="text-xs font-medium tracking-wide text-[#8ba4bd] uppercase">
-          Rajada Vento
-        </span>
-        <span className="mt-1 text-3xl font-extrabold text-foreground leading-none">
-          {Math.round(data.currentWindGust)} km/h
-        </span>
-        <span className="mt-1 text-xs font-bold" style={{ color: data.currentWindColor }}>
-          {data.currentWindType} {data.currentWindIntensity}
+        <span className="mt-1 text-xs text-[#8ba4bd]">
+          {windDir} &middot; Raj. {Math.round(data.currentWindGust)} km/h
         </span>
       </div>
     </div>
