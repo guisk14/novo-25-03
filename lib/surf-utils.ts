@@ -109,9 +109,12 @@ export interface ForecastData {
   chartData: ChartDataPoint[]
   tableData: {
     time: string
+    timeISO: string
     height: number
     period: number
     direction: number
+    windSpeed: number
+    windDirDeg: number
   }[]
   windTableData: {
     day: string
@@ -177,16 +180,19 @@ export async function fetchForecast(beach: Beach): Promise<ForecastData> {
     })
   }
 
-  // Table data
-  const endTable = Math.min(times.length, idxNow + 24)
+  // Table data (same range as chart - all days)
+  const endTable = Math.min(times.length, idxNow + 120)
   const tableData = []
   for (let i = idxNow; i < endTable; i++) {
     const entra = swellEntraNaPraia(beach, dSwell[i])
     tableData.push({
       time: String(times[i]).slice(11, 16),
+      timeISO: times[i],
       height: entra ? (hSwell[i] ?? 0) * factor : 0,
       period: pSwell[i],
       direction: dSwell[i],
+      windSpeed: windS[i] ?? 0,
+      windDirDeg: windD[i] ?? 0,
     })
   }
 
