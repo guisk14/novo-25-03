@@ -180,52 +180,36 @@ export function WaveChart({ data }: WaveChartProps) {
 
       {/* Active point metrics */}
       {activePoint && (
-        <div className="mt-5 grid grid-cols-4 gap-3">
-          <MetricChip label="Altura" value={formatNum(activePoint.waveHeight, 1)} unit="m" />
-          <MetricChip label="Periodo" value={formatNum(activePoint.wavePeriod, 1)} unit="s" />
-          <MetricChip label="Dir. Onda" value={degToCompass(activePoint.waveDirDeg)} />
-          <MetricChip label="Vento" value={`${Math.round(activePoint.windSpeed)}`} unit={`km/h`} subtitle={degToCompass(activePoint.windDirDeg)} />
+        <div className="mt-3 flex items-center justify-between gap-1 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] px-2 py-2 sm:px-4 sm:py-2.5">
+          <MetricChip label="ALT" value={`${formatNum(activePoint.waveHeight, 1)}m`} accent />
+          <Divider />
+          <MetricChip label="PER" value={`${formatNum(activePoint.wavePeriod, 1)}s`} />
+          <Divider />
+          <MetricChip label="DIR" value={degToCompass(activePoint.waveDirDeg)} />
+          <Divider />
+          <MetricChip label="VNT" value={`${Math.round(activePoint.windSpeed)} ${degToCompass(activePoint.windDirDeg)}`} />
         </div>
       )}
     </div>
   )
 }
 
-function MetricChip({ label, value, unit, subtitle }: { label: string; value: string; unit?: string; subtitle?: string }) {
+function Divider() {
+  return <div className="h-6 w-px bg-[rgba(255,255,255,0.06)]" />
+}
+
+function MetricChip({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div
-      className="flex flex-col items-center justify-center text-center"
-      style={{
-        background: "#1E293B",
-        border: "1px solid rgba(255,255,255,0.06)",
-        borderRadius: 14,
-        padding: "14px 8px",
-        minHeight: 70,
-        gap: 4,
-      }}
-    >
-      <span
-        style={{ fontSize: 11, color: "#94A3B8", letterSpacing: "0.08em" }}
-        className="font-semibold uppercase"
-      >
+    <div className="flex flex-col items-center gap-0.5 min-w-0">
+      <span className="text-[0.5rem] sm:text-[0.55rem] font-medium uppercase tracking-wider text-[#64748B]">
         {label}
       </span>
-      <span className="flex items-baseline gap-0.5">
-        <span
-          style={{ fontSize: 20, fontWeight: 600, color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}
-          className="leading-none"
-        >
-          {value}
-        </span>
-        {unit && (
-          <span style={{ fontSize: 13, color: "#CBD5E1" }} className="leading-none">
-            {unit}
-          </span>
-        )}
+      <span
+        className={`text-xs sm:text-sm font-semibold leading-none truncate ${accent ? "text-primary" : "text-[#E2E8F0]"}`}
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {value}
       </span>
-      {subtitle && (
-        <span style={{ fontSize: 11, color: "#94A3B8" }}>{subtitle}</span>
-      )}
     </div>
   )
 }
