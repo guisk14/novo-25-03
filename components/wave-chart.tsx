@@ -168,12 +168,11 @@ export function WaveChart({ data }: WaveChartProps) {
 
       {/* Active point metrics */}
       {activePoint && (
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <MetricChip label="Altura" value={`${formatNum(activePoint.waveHeight, 1)}m`} color="text-primary" />
           <MetricChip label="Periodo" value={`${formatNum(activePoint.wavePeriod, 1)}s`} color="text-chart-2" />
-          <MetricChip label="Dir. Onda" value={`${degToCompass(activePoint.waveDirDeg)} (${formatNum(activePoint.waveDirDeg, 0)}°)`} color="text-muted-foreground" />
-          <MetricChip label="Vento" value={`${Math.round(activePoint.windSpeed)} km/h`} color="text-chart-4" />
-          <MetricChip label="Dir. Vento" value={`${degToCompass(activePoint.windDirDeg)} (${formatNum(activePoint.windDirDeg, 0)}°)`} color="text-muted-foreground" />
+          <MetricChip label="Dir. Onda" value={degToCompass(activePoint.waveDirDeg)} color="text-muted-foreground" />
+          <MetricChip label="Vento" value={`${Math.round(activePoint.windSpeed)} km/h ${degToCompass(activePoint.windDirDeg)}`} color="text-chart-4" />
         </div>
       )}
     </div>
