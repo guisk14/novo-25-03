@@ -50,12 +50,35 @@ function computeTableDaySegments(data: ForecastData["tableData"]): DaySegment[] 
   return segs
 }
 
+function computeWindDaySegments(data: ForecastData["windTableData"]): DaySegment[] {
+  if (!data.length) return []
+  const segs: DaySegment[] = []
+  let start = 0
+  let curKey = dayKey(data[0].timeISO)
+  for (let i = 1; i < data.length; i++) {
+    const k = dayKey(data[i].timeISO)
+    if (k !== curKey) {
+      segs.push({ key: curKey, shortLabel: dayLabelShort(data[start].timeISO), number: dayNumber(data[start].timeISO), startIdx: start, endIdx: i - 1 })
+      start = i
+      curKey = k
+    }
+  }
+  segs.push({ key: curKey, shortLabel: dayLabelShort(data[start].timeISO), number: dayNumber(data[start].timeISO), startIdx: start, endIdx: data.length - 1 })
+  return segs
+}
+
 export function ForecastTables({ data, beachName, loading }: ForecastTablesProps) {
   const [selectedDayIdx, setSelectedDayIdx] = useState(0)
+  const [selectedWindDayIdx, setSelectedWindDayIdx] = useState(0)
 
   const segments = useMemo(() => {
     if (!data) return []
     return computeTableDaySegments(data.tableData)
+  }, [data])
+
+  const windSegments = useMemo(() => {
+    if (!data) return []
+    return computeWindDaySegments(data.windTableData)
   }, [data])
 
   const filteredTableData = useMemo(() => {
@@ -63,6 +86,12 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
     const seg = segments[selectedDayIdx] ?? segments[0]
     return data.tableData.slice(seg.startIdx, seg.endIdx + 1)
   }, [data, segments, selectedDayIdx])
+
+  const filteredWindData = useMemo(() => {
+    if (!data || !windSegments.length) return []
+    const seg = windSegments[selectedWindDayIdx] ?? windSegments[0]
+    return data.windTableData.slice(seg.startIdx, seg.endIdx + 1)
+  }, [data, windSegments, selectedWindDayIdx])
 
   return (
     <div className="flex flex-col gap-4">
@@ -72,6 +101,27 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
           {"Direcao do Vento (Maral / Terral) — "}
           <span className="text-primary">{beachName}</span>
         </h3>
+
+        {/* Wind Day selector */}
+        {windSegments.length > 0 && (
+          <div className="mb-4 grid gap-1" style={{ gridTemplateColumns: `repeat(${windSegments.length}, minmax(0, 1fr))` }}>
+            {windSegments.map((seg, idx) => (
+              <button
+                key={seg.key}
+                type="button"
+                onClick={() => setSelectedWindDayIdx(idx)}
+                className={`flex flex-col items-center justify-center rounded-md px-1 py-1.5 text-center font-extrabold uppercase transition-colors cursor-pointer ${
+                  idx === selectedWindDayIdx
+                    ? "bg-primary/20 text-primary"
+                    : "bg-[rgba(255,255,255,0.04)] text-muted-foreground hover:bg-[rgba(255,255,255,0.08)]"
+                }`}
+              >
+                <span className="text-[0.6rem] sm:text-xs leading-none">{seg.shortLabel}</span>
+                <span className="text-[0.55rem] sm:text-[0.6rem] leading-none mt-0.5 opacity-70">{seg.number}</span>
+              </button>
+            ))}
+          </div>
+        )}
         <div className="overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.05)]">
           <table className="w-full text-left">
             <thead>
@@ -89,7 +139,14 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
                   </td>
                 </tr>
               ) : (
-                data.windTableData.map((row, i) => (
+                data.windTableData.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">
+                    Sem dados
+                  </td>
+                </tr>
+              ) : (
+                filteredWindData.map((row, i) => (
                   <tr key={i} className="border-t border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.03)] transition-colors">
                     <td className="px-4 py-3 text-sm text-muted-foreground">{row.hour}</td>
                     <td className="px-4 py-3 text-sm text-foreground font-semibold">{row.speed} km/h {row.direction}</td>

@@ -119,6 +119,7 @@ export interface ForecastData {
   windTableData: {
     day: string
     hour: string
+    timeISO: string
     speed: number
     direction: string
     type: string
@@ -198,14 +199,11 @@ export async function fetchForecast(beach: Beach): Promise<ForecastData> {
     })
   }
 
-  // Wind table data (00:00 - 23:00 do dia atual)
+  // Wind table data (all days, every 3h - same range as chart)
   const windTableData: ForecastData["windTableData"] = []
-  const today = new Date()
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0).getTime()
-  const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59).getTime()
-  for (let i = 0; i < weather.hourly.time.length; i += 3) {
-    const tMs = safeParseDate(weather.hourly.time[i]).getTime()
-    if (tMs < todayStart || tMs > todayEnd) continue
+  const windStartTable = idxNow + ((3 - (idxNow % 3)) % 3)
+  const endWind = Math.min(weather.hourly.time.length, idxNow + 120)
+  for (let i = windStartTable; i < endWind; i += 3) {
     const d = safeParseDate(weather.hourly.time[i])
     const day = d.toLocaleDateString("pt-BR", { weekday: "short" })
     const hh = String(d.getHours()).padStart(2, "0") + ":00"
@@ -214,6 +212,7 @@ export async function fetchForecast(beach: Beach): Promise<ForecastData> {
     windTableData.push({
       day,
       hour: hh,
+      timeISO: weather.hourly.time[i],
       speed: Math.round(windS[i]),
       direction: degToCompass(windD[i]),
       type,
