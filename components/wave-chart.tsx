@@ -21,10 +21,21 @@ function dayKey(iso: string) {
   return String(iso).slice(0, 10)
 }
 
-function dayLabelTop(iso: string) {
+function dayLabelFull(iso: string) {
   const d = safeParseDate(iso)
   const dias = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"]
   return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}`
+}
+
+function dayLabelShort(iso: string) {
+  const d = safeParseDate(iso)
+  const dias = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"]
+  return dias[d.getDay()]
+}
+
+function dayNumber(iso: string) {
+  const d = safeParseDate(iso)
+  return String(d.getDate()).padStart(2, "0")
 }
 
 function hourOnly(iso: string) {
@@ -47,12 +58,12 @@ function computeDaySegments(data: ChartDataPoint[]): DaySegment[] {
   for (let i = 1; i < data.length; i++) {
     const k = dayKey(data[i].time)
     if (k !== curKey) {
-      segs.push({ key: curKey, label: dayLabelTop(data[start].time), startIdx: start, endIdx: i - 1 })
+      segs.push({ key: curKey, label: dayLabelFull(data[start].time), shortLabel: dayLabelShort(data[start].time), number: dayNumber(data[start].time), startIdx: start, endIdx: i - 1 })
       start = i
       curKey = k
     }
   }
-  segs.push({ key: curKey, label: dayLabelTop(data[start].time), startIdx: start, endIdx: data.length - 1 })
+  segs.push({ key: curKey, label: dayLabelFull(data[start].time), shortLabel: dayLabelShort(data[start].time), number: dayNumber(data[start].time), startIdx: start, endIdx: data.length - 1 })
   return segs
 }
 
