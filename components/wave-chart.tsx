@@ -121,11 +121,11 @@ export function WaveChart({ data }: WaveChartProps) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       {/* Day header */}
-      <div className="mb-4 flex gap-1 overflow-x-auto pb-2">
+      <div className="mb-4 grid gap-1" style={{ gridTemplateColumns: `repeat(${segments.length}, minmax(0, 1fr))` }}>
         {segments.map((seg, idx) => (
           <span
             key={seg.key}
-            className={`shrink-0 rounded-md px-3 py-1.5 text-xs font-extrabold uppercase ${
+            className={`truncate rounded-md px-2 py-1.5 text-center text-[0.65rem] sm:text-xs font-extrabold uppercase ${
               idx === 0
                 ? "bg-primary/20 text-primary"
                 : "bg-[rgba(255,255,255,0.04)] text-muted-foreground"
