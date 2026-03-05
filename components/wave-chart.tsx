@@ -10,6 +10,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  ReferenceArea,
+  Label,
 } from "recharts"
 import { safeParseDate, formatNum, degToCompass } from "@/lib/surf-utils"
 import type { ChartDataPoint } from "@/lib/surf-utils"
@@ -134,30 +136,20 @@ export function WaveChart({ data }: WaveChartProps) {
     )
   }
 
+  // Compute end index for each day boundary
+  const dayRanges = useMemo(() => {
+    return dayBoundaries.map((b, idx) => {
+      const endIdx = idx < dayBoundaries.length - 1
+        ? dayBoundaries[idx + 1].index - 1
+        : chartData.length - 1
+      return { ...b, endIdx }
+    })
+  }, [dayBoundaries, chartData.length])
+
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      {/* Day header bar - continuous segmented bar */}
-      <div className="mb-0 flex rounded-t-lg overflow-hidden border border-[rgba(255,255,255,0.08)]">
-        {dayBoundaries.map((b, idx) => (
-          <div
-            key={b.index}
-            className={`flex-1 text-center py-1.5 sm:py-2 text-[0.55rem] sm:text-xs font-bold uppercase tracking-wide
-              ${idx === 0
-                ? "bg-[rgba(255,255,255,0.06)] text-primary"
-                : "bg-[rgba(255,255,255,0.02)] text-muted-foreground"
-              }
-              ${idx > 0 ? "border-l border-[rgba(255,255,255,0.1)]" : ""}
-            `}
-          >
-            {b.label.split(" ")[0]} ({b.label.split(" ")[1]})
-          </div>
-        ))}
-      </div>
-
-      {/* Chart - all 5 days, attached to header */}
-      <div className="rounded-b-lg border-x border-b border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.15)] px-1 pt-2 pb-1">
-      <ResponsiveContainer width="100%" height={220}>
-        <AreaChart data={chartData} onMouseMove={handleMouseMove}>
+      <ResponsiveContainer width="100%" height={260}>
+        <AreaChart data={chartData} onMouseMove={handleMouseMove} margin={{ top: 28, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="seaGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.4} />
@@ -165,6 +157,32 @@ export function WaveChart({ data }: WaveChartProps) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+          {/* Day header labels rendered inside chart as ReferenceAreas */}
+          {dayRanges.map((range, idx) => (
+            <ReferenceArea
+              key={range.index}
+              x1={range.index}
+              x2={range.endIdx}
+              y1={0}
+              y2={0}
+              ifOverflow="extendDomain"
+              fill="transparent"
+              fillOpacity={0}
+            >
+              <Label
+                value={`${range.label.split(" ")[0]} (${range.label.split(" ")[1]})`}
+                position="top"
+                offset={12}
+                style={{
+                  fill: idx === 0 ? "#38bdf8" : "#a1a1aa",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  textTransform: "uppercase" as const,
+                  letterSpacing: "0.05em",
+                }}
+              />
+            </ReferenceArea>
+          ))}
           {/* Day separator lines */}
           {dayBoundaries.slice(1).map((b) => (
             <ReferenceLine
@@ -173,6 +191,7 @@ export function WaveChart({ data }: WaveChartProps) {
               stroke="rgba(255,255,255,0.18)"
               strokeWidth={1}
               strokeDasharray="3 3"
+              label=""
             />
           ))}
           <XAxis dataKey="index" hide />
@@ -189,7 +208,6 @@ export function WaveChart({ data }: WaveChartProps) {
           />
         </AreaChart>
       </ResponsiveContainer>
-      </div>
 
       {/* Active point metrics */}
       {activePoint && (
