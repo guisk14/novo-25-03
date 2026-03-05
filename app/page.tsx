@@ -10,6 +10,7 @@ import { BeachSelector } from "@/components/beach-selector"
 import { ForecastCards } from "@/components/forecast-cards"
 import { WaveChart } from "@/components/wave-chart"
 import { ForecastTables } from "@/components/forecast-tables"
+import { TideTable } from "@/components/tide-table"
 import { SurfMap } from "@/components/surf-map"
 import { Loader2 } from "lucide-react"
 
@@ -87,6 +88,8 @@ export default function HomePage() {
             beachName={beach.name}
             loading={isLoading}
           />
+
+          <TideTable lat={beach.lat} />
 
           <p className="text-center text-sm font-semibold text-primary">
             {isLoading ? "Aguardando atualizacao..." : data ? "Atualizado" : "Aguardando atualizacao..."}
