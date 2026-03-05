@@ -165,10 +165,21 @@ export async function fetchForecast(beach: Beach): Promise<ForecastData> {
   const wTypeNow = classifyWind(wDirNow, beach.inletRanges || [])
   const wIntNow = classifyIntensity(wSpeedNow)
 
-  // Chart data
+  // Find start of today (00:00) for chart alignment
+  const todayDate = safeParseDate(times[idxNow])
+  const todayMidnight = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 0, 0, 0).getTime()
+  let idxMidnight = idxNow
+  for (let i = 0; i < times.length; i++) {
+    if (safeParseDate(times[i]).getTime() >= todayMidnight) {
+      idxMidnight = i
+      break
+    }
+  }
+
+  // Chart data (starts at 00:00 of today, 5 full days = 120h)
   const chartData: ChartDataPoint[] = []
-  const endChart = Math.min(times.length, idxNow + 120)
-  for (let i = idxNow; i < endChart; i++) {
+  const endChart = Math.min(times.length, idxMidnight + 120)
+  for (let i = idxMidnight; i < endChart; i++) {
     if (hWave[i] == null) continue
     const entra = swellEntraNaPraia(beach, dWave[i])
     chartData.push({
