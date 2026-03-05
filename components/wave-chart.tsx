@@ -376,7 +376,7 @@ export function WaveChart({ data }: WaveChartProps) {
                 width="14"
                 height="14"
                 viewBox="0 0 24 24"
-                className="text-yellow-400 shrink-0"
+                className="text-gray-400 shrink-0"
                 style={{ transform: `rotate(${point.windDirDeg}deg)` }}
               >
                 <path d="M12 2l0 20M12 2l-5 5M12 2l5 5" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -385,7 +385,7 @@ export function WaveChart({ data }: WaveChartProps) {
             <span className="text-sm sm:text-base font-extrabold text-foreground leading-none">
               {Math.round(point?.windSpeed ?? 0)} km/h
             </span>
-            <span className="text-base sm:text-lg font-black text-yellow-400 leading-none">
+            <span className="text-base sm:text-lg font-black text-gray-300 leading-none">
               {degToCompass(point?.windDirDeg)}
             </span>
           </div>
