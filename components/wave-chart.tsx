@@ -9,10 +9,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts"
 import { safeParseDate, formatNum, degToCompass } from "@/lib/surf-utils"
 import type { ChartDataPoint } from "@/lib/surf-utils"
-import { DaySelector } from "@/components/day-selector"
 
 interface WaveChartProps {
   data: ChartDataPoint[]
@@ -20,12 +20,6 @@ interface WaveChartProps {
 
 function dayKey(iso: string) {
   return String(iso).slice(0, 10)
-}
-
-function dayLabelFull(iso: string) {
-  const d = safeParseDate(iso)
-  const dias = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"]
-  return `${dias[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}`
 }
 
 function dayLabelShort(iso: string) {
@@ -44,30 +38,9 @@ function hourOnly(iso: string) {
   return `${String(d.getHours()).padStart(2, "0")}h`
 }
 
-interface DaySegment {
-  key: string
+interface DayBoundary {
+  index: number
   label: string
-  shortLabel: string
-  number: string
-  startIdx: number
-  endIdx: number
-}
-
-function computeDaySegments(data: ChartDataPoint[]): DaySegment[] {
-  if (!data.length) return []
-  const segs: DaySegment[] = []
-  let start = 0
-  let curKey = dayKey(data[0].time)
-  for (let i = 1; i < data.length; i++) {
-    const k = dayKey(data[i].time)
-    if (k !== curKey) {
-      segs.push({ key: curKey, label: dayLabelFull(data[start].time), shortLabel: dayLabelShort(data[start].time), number: dayNumber(data[start].time), startIdx: start, endIdx: i - 1 })
-      start = i
-      curKey = k
-    }
-  }
-  segs.push({ key: curKey, label: dayLabelFull(data[start].time), shortLabel: dayLabelShort(data[start].time), number: dayNumber(data[start].time), startIdx: start, endIdx: data.length - 1 })
-  return segs
 }
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: ChartDataPoint }> }) {
@@ -102,25 +75,45 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
 
 export function WaveChart({ data }: WaveChartProps) {
   const [activePoint, setActivePoint] = useState<ChartDataPoint | null>(null)
-  const [selectedDayIdx, setSelectedDayIdx] = useState(0)
 
-  const segments = useMemo(() => computeDaySegments(data), [data])
-
-  // Filter data for the selected day only
-  const filteredData = useMemo(() => {
-    if (!segments.length) return []
-    const seg = segments[selectedDayIdx] ?? segments[0]
-    return data.slice(seg.startIdx, seg.endIdx + 1)
-  }, [data, segments, selectedDayIdx])
-
+  // Build chart data with composite label for XAxis
   const chartData = useMemo(
     () =>
-      filteredData.map((d, i) => ({
+      data.map((d, i) => ({
         ...d,
         index: i,
         label: hourOnly(d.time),
       })),
-    [filteredData]
+    [data]
+  )
+
+  // Find day boundaries for reference lines and header
+  const dayBoundaries = useMemo(() => {
+    const boundaries: DayBoundary[] = []
+    if (!data.length) return boundaries
+    let curKey = dayKey(data[0].time)
+    boundaries.push({ index: 0, label: `${dayLabelShort(data[0].time)} ${dayNumber(data[0].time)}` })
+    for (let i = 1; i < data.length; i++) {
+      const k = dayKey(data[i].time)
+      if (k !== curKey) {
+        boundaries.push({ index: i, label: `${dayLabelShort(data[i].time)} ${dayNumber(data[i].time)}` })
+        curKey = k
+      }
+    }
+    return boundaries
+  }, [data])
+
+  // Custom XAxis tick: show day label at boundaries, hour every 6h
+  const xTickFormatter = useCallback(
+    (_val: string, index: number) => {
+      const boundary = dayBoundaries.find((b) => b.index === index)
+      if (boundary) return boundary.label
+      const d = safeParseDate(data[index]?.time ?? "")
+      const h = d.getHours()
+      if (h % 6 === 0) return `${String(h).padStart(2, "0")}h`
+      return ""
+    },
+    [dayBoundaries, data]
   )
 
   const handleMouseMove = useCallback(
@@ -142,11 +135,24 @@ export function WaveChart({ data }: WaveChartProps) {
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      {/* Day selector */}
-      <DaySelector segments={segments} selectedIdx={selectedDayIdx} onSelect={setSelectedDayIdx} />
+      {/* Day header pills */}
+      <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
+        {dayBoundaries.map((b, idx) => (
+          <span
+            key={b.index}
+            className={`flex-shrink-0 rounded-lg px-2.5 py-1 text-[0.6rem] sm:text-xs font-extrabold uppercase tracking-wide ${
+              idx === 0
+                ? "bg-primary/15 text-primary"
+                : "bg-[rgba(255,255,255,0.04)] text-muted-foreground"
+            }`}
+          >
+            {b.label}
+          </span>
+        ))}
+      </div>
 
-      {/* Chart - shows only selected day */}
-      <ResponsiveContainer width="100%" height={220}>
+      {/* Chart - all 5 days */}
+      <ResponsiveContainer width="100%" height={240}>
         <AreaChart data={chartData} onMouseMove={handleMouseMove}>
           <defs>
             <linearGradient id="seaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -155,28 +161,39 @@ export function WaveChart({ data }: WaveChartProps) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+          {/* Day separator lines */}
+          {dayBoundaries.slice(1).map((b) => (
+            <ReferenceLine
+              key={b.index}
+              x={b.index}
+              stroke="rgba(255,255,255,0.12)"
+              strokeDasharray="4 4"
+            />
+          ))}
           <XAxis
-            dataKey="label"
-            tick={{ fill: "#a1a1aa", fontSize: 10 }}
+            dataKey="index"
+            tickFormatter={xTickFormatter}
+            tick={{ fill: "#a1a1aa", fontSize: 9 }}
             axisLine={false}
             tickLine={false}
-            interval="preserveStartEnd"
+            interval={5}
           />
           <YAxis
             tick={{ fill: "#a1a1aa", fontSize: 10 }}
             axisLine={false}
             tickLine={false}
             width={28}
+            unit="m"
           />
           <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="waveHeight"
             stroke="#38bdf8"
-            strokeWidth={3}
+            strokeWidth={2}
             fill="url(#seaGradient)"
             dot={false}
-            activeDot={{ r: 5, fill: "#38bdf8", strokeWidth: 2, stroke: "#121214" }}
+            activeDot={{ r: 4, fill: "#38bdf8", strokeWidth: 2, stroke: "#121214" }}
           />
         </AreaChart>
       </ResponsiveContainer>
