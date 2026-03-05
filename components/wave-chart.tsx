@@ -135,24 +135,27 @@ export function WaveChart({ data }: WaveChartProps) {
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      {/* Day header pills */}
-      <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
+      {/* Day header bar - continuous segmented bar */}
+      <div className="mb-0 flex rounded-t-lg overflow-hidden border border-[rgba(255,255,255,0.08)]">
         {dayBoundaries.map((b, idx) => (
-          <span
+          <div
             key={b.index}
-            className={`flex-shrink-0 rounded-lg px-2.5 py-1 text-[0.6rem] sm:text-xs font-extrabold uppercase tracking-wide ${
-              idx === 0
-                ? "bg-primary/15 text-primary"
-                : "bg-[rgba(255,255,255,0.04)] text-muted-foreground"
-            }`}
+            className={`flex-1 text-center py-1.5 sm:py-2 text-[0.55rem] sm:text-xs font-bold uppercase tracking-wide
+              ${idx === 0
+                ? "bg-[rgba(255,255,255,0.06)] text-primary"
+                : "bg-[rgba(255,255,255,0.02)] text-muted-foreground"
+              }
+              ${idx > 0 ? "border-l border-[rgba(255,255,255,0.1)]" : ""}
+            `}
           >
-            {b.label}
-          </span>
+            {b.label.split(" ")[0]} ({b.label.split(" ")[1]})
+          </div>
         ))}
       </div>
 
-      {/* Chart - all 5 days */}
-      <ResponsiveContainer width="100%" height={240}>
+      {/* Chart - all 5 days, attached to header */}
+      <div className="rounded-b-lg border-x border-b border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.15)] px-1 pt-2 pb-1">
+      <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={chartData} onMouseMove={handleMouseMove}>
           <defs>
             <linearGradient id="seaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -166,8 +169,9 @@ export function WaveChart({ data }: WaveChartProps) {
             <ReferenceLine
               key={b.index}
               x={b.index}
-              stroke="rgba(255,255,255,0.12)"
-              strokeDasharray="4 4"
+              stroke="rgba(255,255,255,0.18)"
+              strokeWidth={1}
+              strokeDasharray="3 3"
             />
           ))}
           <XAxis
@@ -197,6 +201,7 @@ export function WaveChart({ data }: WaveChartProps) {
           />
         </AreaChart>
       </ResponsiveContainer>
+      </div>
 
       {/* Active point metrics */}
       {activePoint && (
