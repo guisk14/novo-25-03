@@ -366,13 +366,30 @@ export function WaveChart({ data }: WaveChartProps) {
           showArrow
           arrowDeg={point?.waveDirDeg}
         />
-        <MetricItem
-          label="VENTO"
-          value={`${Math.round(point?.windSpeed ?? 0)} km/h ${degToCompass(point?.windDirDeg)}`}
-          color="text-muted-foreground"
-          showArrow
-          arrowDeg={point?.windDirDeg}
-        />
+        <div className="flex flex-col items-center text-center min-w-0 flex-1">
+          <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-muted-foreground leading-tight">
+            VENTO
+          </span>
+          <div className="flex items-center gap-1 mt-0.5">
+            {typeof point?.windDirDeg === "number" && (
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                className="text-yellow-400 shrink-0"
+                style={{ transform: `rotate(${point.windDirDeg}deg)` }}
+              >
+                <path d="M12 2l0 20M12 2l-5 5M12 2l5 5" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+            <span className="text-sm sm:text-base font-extrabold text-foreground leading-none">
+              {Math.round(point?.windSpeed ?? 0)} km/h
+            </span>
+            <span className="text-base sm:text-lg font-black text-yellow-400 leading-none">
+              {degToCompass(point?.windDirDeg)}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )
