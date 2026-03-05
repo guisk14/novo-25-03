@@ -180,7 +180,7 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
                       <span className="hidden md:inline">{formatNum(row.direction, 0)}° </span>{degToCompass(row.direction)}
                     </td>
                     <td className="px-1.5 py-1.5 text-[11px] md:px-4 md:py-3 md:text-sm text-foreground">
-                      {Math.round(row.windSpeed)}<span className="hidden md:inline"> km/h</span> {degToCompass(row.windDirDeg)}
+                      {Math.round(row.windSpeed)} km/h {degToCompass(row.windDirDeg)}
                     </td>
                   </tr>
                 ))
