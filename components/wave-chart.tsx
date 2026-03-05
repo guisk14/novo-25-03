@@ -348,7 +348,7 @@ export function WaveChart({ data }: WaveChartProps) {
       </div>
 
       {/* Bottom metrics */}
-      <div className="flex items-center justify-between border-t border-border px-2 py-3 gap-1">
+      <div className="flex items-center justify-between border-t border-border px-1 py-2 gap-0.5 md:px-2 md:py-3 md:gap-1">
         <MetricItem
           label="ALTURA"
           value={`${formatNum(point?.waveHeight, 1)} m`}
@@ -360,32 +360,32 @@ export function WaveChart({ data }: WaveChartProps) {
           color="text-red-400"
         />
         <MetricItem
-          label="DIRECAO DE PICO"
+          label="DIRECAO"
           value={degToCompass(point?.waveDirDeg)}
           color="text-sky-400"
           showArrow
           arrowDeg={point?.waveDirDeg}
         />
         <div className="flex flex-col items-center text-center min-w-0 flex-1">
-          <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-muted-foreground leading-tight">
+          <span className="text-[7px] md:text-[9px] font-bold uppercase tracking-wide text-muted-foreground leading-tight">
             VENTO
           </span>
-          <div className="flex items-center gap-1 mt-0.5">
+          <div className="flex items-center gap-0.5 mt-0.5">
             {typeof point?.windDirDeg === "number" && (
               <svg
-                width="14"
-                height="14"
+                width="10"
+                height="10"
                 viewBox="0 0 24 24"
-                className="text-gray-400 shrink-0"
+                className="text-gray-400 shrink-0 md:w-3.5 md:h-3.5"
                 style={{ transform: `rotate(${point.windDirDeg}deg)` }}
               >
                 <path d="M12 2l0 20M12 2l-5 5M12 2l5 5" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
-            <span className="text-sm sm:text-base font-extrabold text-foreground leading-none">
-              {Math.round(point?.windSpeed ?? 0)} km/h
+            <span className="text-[11px] md:text-base font-extrabold text-foreground leading-none">
+              {Math.round(point?.windSpeed ?? 0)}
             </span>
-            <span className="text-base sm:text-lg font-black text-gray-300 leading-none">
+            <span className="text-[11px] md:text-lg font-black text-gray-300 leading-none">
               {degToCompass(point?.windDirDeg)}
             </span>
           </div>
@@ -410,22 +410,22 @@ function MetricItem({
 }) {
   return (
     <div className="flex flex-col items-center text-center min-w-0 flex-1">
-      <span className={`text-[8px] sm:text-[9px] font-bold uppercase tracking-wide ${color} leading-tight`}>
+      <span className={`text-[7px] md:text-[9px] font-bold uppercase tracking-wide ${color} leading-tight`}>
         {label}
       </span>
       <div className="flex items-center gap-0.5 mt-0.5">
         {showArrow && typeof arrowDeg === "number" && (
           <svg
-            width="12"
-            height="12"
+            width="10"
+            height="10"
             viewBox="0 0 24 24"
-            className={`${color} shrink-0`}
+            className={`${color} shrink-0 md:w-3 md:h-3`}
             style={{ transform: `rotate(${arrowDeg}deg)` }}
           >
             <path d="M12 2l0 20M12 2l-5 5M12 2l5 5" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
-        <span className="text-sm sm:text-base font-extrabold text-foreground leading-none">{value}</span>
+        <span className="text-[11px] md:text-base font-extrabold text-foreground leading-none">{value}</span>
       </div>
     </div>
   )
