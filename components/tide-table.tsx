@@ -86,14 +86,6 @@ export function TideTable() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
         {tideData.map((tide, i) => {
-          const isPast = (() => {
-            const now = new Date()
-            const currentHour = now.getHours() + now.getMinutes() / 60
-            const [hours, minutes] = tide.hora.split(":").map(Number)
-            const tideHour = hours + minutes / 60
-            return tideHour < currentHour
-          })()
-
           const isNext = mounted && tide === nextTide
           const isHigh = tide.type === "MARE ALTA"
 
@@ -101,9 +93,7 @@ export function TideTable() {
             <div
               key={i}
               className={`relative group rounded-xl border transition-all ${
-                isPast
-                  ? "border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.2)] opacity-50"
-                  : isNext
+                isNext
                   ? "border-primary/60 bg-gradient-to-br from-primary/20 to-primary/5 shadow-[0_0_20px_rgba(56,189,248,0.2)]"
                   : "border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.02)] hover:border-[rgba(255,255,255,0.15)]"
               }`}
