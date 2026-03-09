@@ -89,7 +89,7 @@ export default function HomePage() {
             loading={isLoading}
           />
 
-          <TideTable />
+          <TideTable lat={beach.lat} />
 
           <p className="text-center text-sm font-semibold text-primary">
             {isLoading ? "Aguardando atualizacao..." : data ? "Atualizado" : "Aguardando atualizacao..."}
