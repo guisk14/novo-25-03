@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { ArrowUp, ArrowDown } from "lucide-react"
 
 interface TideEvent {
@@ -71,8 +71,14 @@ interface TideTableProps {
 export function TideTable({ lat }: TideTableProps) {
   const { events: tides, curve } = useMemo(() => computeTideExtremes(lat), [lat])
 
-  const now = new Date()
-  const currentHour = now.getHours() + now.getMinutes() / 60
+  const [currentHour, setCurrentHour] = useState(12)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const now = new Date()
+    setCurrentHour(now.getHours() + now.getMinutes() / 60)
+    setMounted(true)
+  }, [])
 
   if (!tides.length) return null
 
@@ -102,7 +108,7 @@ export function TideTable({ lat }: TideTableProps) {
   const nowY = toSvgY(curve[closestIdx].y)
 
   // Find next tide event
-  const nextTide = tides.find(t => t.hour > currentHour)
+  const nextTide = mounted ? tides.find(t => t.hour > currentHour) : tides[0]
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 md:p-5">
@@ -215,7 +221,7 @@ export function TideTable({ lat }: TideTableProps) {
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
         {tides.map((tide, i) => {
           const isHigh = tide.type === "alta"
-          const isPast = tide.hour < currentHour
+          const isPast = mounted && tide.hour < currentHour
           return (
             <div
               key={i}
@@ -225,7 +231,7 @@ export function TideTable({ lat }: TideTableProps) {
                   : "border-border bg-secondary/50"
               }`}
             >
-              {!isPast && tide === nextTide && (
+              {mounted && !isPast && tide === nextTide && (
                 <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full bg-primary text-[7px] md:text-[8px] font-bold uppercase tracking-wider text-primary-foreground">
                   Proxima
                 </div>
