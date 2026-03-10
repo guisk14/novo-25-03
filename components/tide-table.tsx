@@ -190,7 +190,7 @@ export function TideTable({ lat }: TideTableProps) {
             </p>
             {/* Progress line */}
             <div className="mt-2 flex items-center gap-1">
-              <div className="relative h-[3px] flex-1 bg-muted-foreground/30 rounded-full">
+              <div className="relative h-[3px] w-[180px] bg-muted-foreground/30 rounded-full">
                 {(() => {
                   // Calculate progress between previous tide and next tide
                   const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
