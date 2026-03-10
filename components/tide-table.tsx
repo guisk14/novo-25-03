@@ -193,10 +193,10 @@ export function TideTable({ lat }: TideTableProps) {
             {/* Mobile: Cheia/Seca em Xh Xm */}
             <p className="md:hidden text-xs font-bold">
               <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
-                {nextTide.type === "alta" ? "Cheia" : "Seca"}
+                {nextTide.type === "alta" ? "Cheia" : "Seca"} em
               </span>
               <span className="text-foreground">
-                {" "}em {countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
+                {" "}{countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
               </span>
             </p>
             {/* Desktop: Maré Alta/Baixa em: Xh Xm */}
