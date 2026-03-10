@@ -309,25 +309,7 @@ export function TideTable({ lat }: TideTableProps) {
             strokeOpacity="0.4"
           />
 
-          {/* Highlighted segment: agora -> proxima mare */}
-          {nextTide && (() => {
-            const activePoints = curve
-              .filter(p => p.x >= currentHour && p.x <= nextTide.hour)
-              .map(p => `${toSvgX(p.x)},${toSvgY(p.y)}`)
-            if (activePoints.length < 2) return null
-            const activePath = `M${activePoints.join(" L")}`
-            return (
-              <path
-                d={activePath}
-                fill="none"
-                stroke="url(#activeSegment)"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                filter="drop-shadow(0 0 3px rgba(56,189,248,0.5))"
-              />
-            )
-          })()}
+
 
           {/* Hour markers - apenas linhas verticais */}
           {[0, 6, 12, 18, 24].map(h => (
@@ -343,6 +325,44 @@ export function TideTable({ lat }: TideTableProps) {
           ))}
 
         </svg>
+        {/* Highlighted segment overlay - SVG separado com aspect ratio preservado */}
+        {nextTide && (() => {
+          const activePoints = curve.filter(p => p.x >= currentHour && p.x <= nextTide.hour)
+          if (activePoints.length < 2) return null
+          
+          // Calcula o bounding box do segmento ativo
+          const startX = (pad / svgW * 100) + (currentHour / 24) * ((svgW - pad * 2) / svgW * 100)
+          const endX = (pad / svgW * 100) + (nextTide.hour / 24) * ((svgW - pad * 2) / svgW * 100)
+          
+          return (
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox={`0 0 100 100`}
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <linearGradient id="activeSegmentOverlay" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#2dd4bf" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              <path
+                d={activePoints.map((p, i) => {
+                  const x = (pad / svgW * 100) + (p.x / 24) * ((svgW - pad * 2) / svgW * 100)
+                  const y = (pad / svgH * 100) + (1 - (p.y - minY) / rangeY) * ((svgH - pad * 2) / svgH * 100)
+                  return `${i === 0 ? 'M' : 'L'}${x},${y}`
+                }).join(' ')}
+                fill="none"
+                stroke="url(#activeSegmentOverlay)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                filter="drop-shadow(0 0 3px rgba(56,189,248,0.5))"
+              />
+            </svg>
+          )
+        })()}
         {/* Tide extreme dots - fora do SVG para nao distorcer */}
         {tides.map((t, i) => {
           const xPercent = (pad / svgW * 100) + (t.hour / 24) * ((svgW - pad * 2) / svgW * 100)
