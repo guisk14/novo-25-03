@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react"
 import { ArrowUp, ArrowDown } from "lucide-react"
+import tideData from "@/lib/mare-santos-2026.json"
 
 interface TideEvent {
   type: "alta" | "baixa"
@@ -10,66 +11,98 @@ interface TideEvent {
   height: number
 }
 
-function computeTideExtremes(lat: number): { events: TideEvent[]; curve: { x: number; y: number }[] } {
+interface TideDataEntry {
+  hora: string
+  altura: number
+}
+
+interface TideDataFile {
+  mares: {
+    [date: string]: TideDataEntry[]
+  }
+}
+
+function getTodayTides(): { events: TideEvent[]; curve: { x: number; y: number }[] } {
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
+  
+  const data = tideData as TideDataFile
+  const todayData = data.mares[todayKey] || []
 
-  const baseMean = 1.8
-  const m2Amp = 1.2 + Math.abs(lat + 23.5) * 0.03
-  const s2Amp = 0.35 + Math.abs(lat + 23.5) * 0.01
-  const m2Period = 12.42 * 3600 * 1000
-  const s2Period = 12.0 * 3600 * 1000
-  const phaseOffset = (lat * 0.7 + now.getDate() * 0.3) * Math.PI / 12
-
-  function tideAt(t: number): number {
-    const elapsed = t - today.getTime()
-    const m2 = m2Amp * Math.cos((2 * Math.PI * elapsed) / m2Period + phaseOffset)
-    const s2 = s2Amp * Math.cos((2 * Math.PI * elapsed) / s2Period + phaseOffset * 0.8)
-    return baseMean + m2 + s2
-  }
-
-  const step = 10 * 60 * 1000
-  const dayStart = today.getTime()
-  const dayEnd = dayStart + 24 * 3600 * 1000
-
-  // Build smooth curve for the mini chart
-  const curve: { x: number; y: number }[] = []
-  for (let t = dayStart; t <= dayEnd; t += 15 * 60 * 1000) {
-    const hoursFromStart = (t - dayStart) / (3600 * 1000)
-    curve.push({ x: hoursFromStart, y: tideAt(t) })
-  }
-
-  const extremes: TideEvent[] = []
-  let prevH = tideAt(dayStart - step)
-  let prevDir: "up" | "down" | null = null
-
-  for (let t = dayStart; t <= dayEnd; t += step) {
-    const h = tideAt(t)
-    const dir = h > prevH ? "up" : "down"
-    if (prevDir && dir !== prevDir) {
-      const extremeTime = new Date(t - step)
-      const extremeH = tideAt(t - step)
-      const isHigh = prevDir === "up"
-      extremes.push({
-        type: isHigh ? "alta" : "baixa",
-        time: `${String(extremeTime.getHours()).padStart(2, "0")}:${String(extremeTime.getMinutes()).padStart(2, "0")}`,
-        hour: extremeTime.getHours() + extremeTime.getMinutes() / 60,
-        height: parseFloat(extremeH.toFixed(1)),
-      })
+  // Convert JSON data to TideEvent format
+  const events: TideEvent[] = []
+  
+  for (let i = 0; i < todayData.length; i++) {
+    const entry = todayData[i]
+    const [hours, minutes] = entry.hora.split(":").map(Number)
+    const hour = hours + minutes / 60
+    
+    // Determine if it's high or low tide based on comparing with neighbors
+    let isHigh = false
+    if (todayData.length > 1) {
+      const prevHeight = i > 0 ? todayData[i - 1].altura : entry.altura
+      const nextHeight = i < todayData.length - 1 ? todayData[i + 1].altura : entry.altura
+      isHigh = entry.altura >= prevHeight && entry.altura >= nextHeight
     }
-    prevDir = dir
-    prevH = h
+    
+    events.push({
+      type: isHigh ? "alta" : "baixa",
+      time: entry.hora,
+      hour,
+      height: entry.altura,
+    })
   }
 
-  return { events: extremes.slice(0, 4), curve }
+  // Build smooth curve for the mini chart based on the actual tide events
+  const curve: { x: number; y: number }[] = []
+  
+  if (events.length >= 2) {
+    // Create interpolated curve between tide events
+    for (let h = 0; h <= 24; h += 0.25) {
+      // Find the two events that bracket this hour
+      let before = events[0]
+      let after = events[events.length - 1]
+      
+      for (let i = 0; i < events.length - 1; i++) {
+        if (events[i].hour <= h && events[i + 1].hour >= h) {
+          before = events[i]
+          after = events[i + 1]
+          break
+        }
+      }
+      
+      // Handle edge cases (before first event or after last event)
+      if (h < events[0].hour) {
+        before = { ...events[events.length - 1], hour: events[events.length - 1].hour - 24 }
+        after = events[0]
+      } else if (h > events[events.length - 1].hour) {
+        before = events[events.length - 1]
+        after = { ...events[0], hour: events[0].hour + 24 }
+      }
+      
+      // Sinusoidal interpolation for smooth tide curve
+      const t = (h - before.hour) / (after.hour - before.hour || 1)
+      const smoothT = (1 - Math.cos(t * Math.PI)) / 2
+      const height = before.height + (after.height - before.height) * smoothT
+      
+      curve.push({ x: h, y: height })
+    }
+  } else if (events.length === 1) {
+    // Single event - create a flat line
+    for (let h = 0; h <= 24; h += 0.25) {
+      curve.push({ x: h, y: events[0].height })
+    }
+  }
+
+  return { events: events.slice(0, 6), curve }
 }
 
 interface TideTableProps {
-  lat: number
+  lat?: number
 }
 
 export function TideTable({ lat }: TideTableProps) {
-  const { events: tides, curve } = useMemo(() => computeTideExtremes(lat), [lat])
+  const { events: tides, curve } = useMemo(() => getTodayTides(), [])
 
   const [currentHour, setCurrentHour] = useState(12)
   const [mounted, setMounted] = useState(false)
