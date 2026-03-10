@@ -173,7 +173,7 @@ export function TideTable({ lat }: TideTableProps) {
     <div className="rounded-xl border border-border bg-card p-4 md:p-5">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-primary mb-0.5">
+          <p className="hidden md:block text-xs font-bold uppercase tracking-widest text-primary mb-0.5">
             Mares
           </p>
           <h3 className="text-sm md:text-lg font-bold text-foreground">
