@@ -141,10 +141,10 @@ export function TideTable({ lat }: TideTableProps) {
 
   if (!tides.length) return null
 
-  // SVG chart dimensions
+  // SVG chart dimensions - altura maior para melhor legibilidade
   const svgW = 400
-  const svgH = 60
-  const pad = 8
+  const svgH = 80
+  const pad = 10
 
   const minY = Math.min(...curve.map(p => p.y))
   const maxY = Math.max(...curve.map(p => p.y))
@@ -278,7 +278,7 @@ export function TideTable({ lat }: TideTableProps) {
         `}</style>
         <svg
           viewBox={`0 0 ${svgW} ${svgH}`}
-          className="w-full h-14 md:h-16"
+          className="w-full h-20 md:h-24"
           preserveAspectRatio="none"
         >
           <defs>
