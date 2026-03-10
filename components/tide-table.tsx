@@ -182,10 +182,25 @@ export function TideTable({ lat }: TideTableProps) {
         </div>
         {nextTide && (
           <div className="text-right min-w-[140px]">
-            <p className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            {/* Mobile: PRÓXIMA MARÉ */}
+            <p className="md:hidden text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Próxima Maré
+            </p>
+            {/* Desktop: PRÓXIMA */}
+            <p className="hidden md:block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               Próxima
             </p>
-            <p className="text-xs md:text-sm font-bold">
+            {/* Mobile: Cheia/Seca em Xh Xm */}
+            <p className="md:hidden text-xs font-bold">
+              <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
+                {nextTide.type === "alta" ? "Cheia" : "Seca"}
+              </span>
+              <span className="text-foreground">
+                {" "}em {countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
+              </span>
+            </p>
+            {/* Desktop: Maré Alta/Baixa em: Xh Xm */}
+            <p className="hidden md:block text-sm font-bold">
               <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
                 {nextTide.type === "alta" ? "Maré Alta" : "Maré Baixa"} em:
               </span>
