@@ -253,10 +253,10 @@ export function TideTable({ lat }: TideTableProps) {
           </h3>
           {nextTide && (
             <div className="flex flex-col items-center">
-              <p className="text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="text-[7px] font-medium uppercase tracking-wide text-muted-foreground/70">
                 Próxima Maré
               </p>
-              <p className="text-xs font-bold">
+              <p className="text-sm font-bold mt-0.5">
                 <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
                   {nextTide.type === "alta" ? "Cheia" : "Seca"} em
                 </span>
@@ -302,8 +302,13 @@ export function TideTable({ lat }: TideTableProps) {
                           />
                         </div>
                         <div 
-                          className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_8px_2px_rgba(56,189,248,0.6)]" : "bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)]"}`}
-                          style={{ left: `calc(${progress}% - 6px)` }}
+                          className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400" : "bg-teal-400"}`}
+                          style={{ 
+                            left: `calc(${progress}% - 6px)`,
+                            boxShadow: tideColor === "sky" 
+                              ? '0 0 8px rgba(56,189,248,0.6)' 
+                              : '0 0 8px rgba(45,212,191,0.6)'
+                          }}
                         />
                       </>
                     )
