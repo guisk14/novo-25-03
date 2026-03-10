@@ -354,11 +354,11 @@ export function TideTable({ lat }: TideTableProps) {
                 }).join(' ')}
                 fill="none"
                 stroke="url(#activeSegmentOverlay)"
-                strokeWidth="2"
+                strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 vectorEffect="non-scaling-stroke"
-                filter="drop-shadow(0 0 3px rgba(56,189,248,0.5))"
+                style={{ filter: 'drop-shadow(0 0 4px rgba(56,189,248,0.6))' }}
               />
             </svg>
           )
