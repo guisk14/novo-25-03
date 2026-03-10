@@ -106,12 +106,38 @@ export function TideTable({ lat }: TideTableProps) {
 
   const [currentHour, setCurrentHour] = useState(12)
   const [mounted, setMounted] = useState(false)
+  const [countdown, setCountdown] = useState({ hours: 0, minutes: 0 })
+
+  // Calculate countdown to next tide
+  const getCountdown = (nextTideHour: number, currentH: number) => {
+    let diffMinutes = Math.round((nextTideHour - currentH) * 60)
+    if (diffMinutes < 0) diffMinutes += 24 * 60 // wrap to next day
+    const hours = Math.floor(diffMinutes / 60)
+    const minutes = diffMinutes % 60
+    return { hours, minutes }
+  }
 
   useEffect(() => {
-    const now = new Date()
-    setCurrentHour(now.getHours() + now.getMinutes() / 60)
+    const updateTime = () => {
+      const now = new Date()
+      setCurrentHour(now.getHours() + now.getMinutes() / 60)
+    }
+    
+    updateTime()
     setMounted(true)
+    
+    // Update every minute
+    const interval = setInterval(updateTime, 60000)
+    return () => clearInterval(interval)
   }, [])
+
+  // Update countdown when currentHour or tides change
+  useEffect(() => {
+    if (mounted && tides.length > 0) {
+      const next = tides.find(t => t.hour > currentHour) || tides[0]
+      setCountdown(getCountdown(next.hour, currentHour))
+    }
+  }, [currentHour, mounted, tides])
 
   if (!tides.length) return null
 
@@ -155,13 +181,38 @@ export function TideTable({ lat }: TideTableProps) {
           </h3>
         </div>
         {nextTide && (
-          <div className="text-right">
+          <div className="text-right min-w-[140px]">
             <p className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               Proxima
             </p>
             <p className="text-xs md:text-sm font-bold text-foreground">
-              Mare {nextTide.type === "alta" ? "Alta" : "Baixa"} {nextTide.time}
+              {nextTide.type === "alta" ? "Mare Alta" : "Mare Baixa"} em {countdown.hours}h {countdown.minutes}m
             </p>
+            {/* Progress line */}
+            <div className="mt-1.5 flex items-center gap-1">
+              <div className="relative h-[2px] flex-1 bg-muted-foreground/20 rounded-full overflow-hidden">
+                {(() => {
+                  // Calculate progress between previous tide and next tide
+                  const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
+                  const prevTide = prevTideIndex >= 0 ? tides[prevTideIndex] : { ...tides[tides.length - 1], hour: tides[tides.length - 1].hour - 24 }
+                  const totalDuration = nextTide.hour - prevTide.hour
+                  const elapsed = currentHour - prevTide.hour
+                  const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100)
+                  return (
+                    <>
+                      <div 
+                        className="absolute left-0 top-0 h-full bg-primary/60 rounded-full"
+                        style={{ width: `${progress}%` }}
+                      />
+                      <div 
+                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full shadow-sm shadow-primary/50"
+                        style={{ left: `calc(${progress}% - 4px)` }}
+                      />
+                    </>
+                  )
+                })()}
+              </div>
+            </div>
           </div>
         )}
       </div>
