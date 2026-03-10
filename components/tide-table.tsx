@@ -171,98 +171,148 @@ export function TideTable({ lat }: TideTableProps) {
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
-      {/* Header com padding interno */}
-      <div className="flex items-start justify-between px-4 pt-4 pb-3 md:px-5 md:pt-5">
-        <div>
-          <p className="hidden md:block text-xs font-bold uppercase tracking-widest text-primary mb-0.5">
-            Mares
-          </p>
-          <h3 className="text-sm md:text-lg font-bold text-foreground">
-            <span className="md:hidden">Marés Hoje</span>
-            <span className="hidden md:inline">Tabela de Marés de Hoje</span>
-          </h3>
-        </div>
-        {nextTide && (
-          <div className="text-right min-w-[140px]">
-            {/* Mobile: PRÓXIMA MARÉ */}
-            <p className="md:hidden text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Próxima Maré
+      {/* Header - Mobile: empilhado / Desktop: lado a lado */}
+      <div className="px-4 pt-4 pb-3 md:px-5 md:pt-5">
+        {/* Desktop: layout lado a lado */}
+        <div className="hidden md:flex md:items-start md:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-primary mb-0.5">
+              Mares
             </p>
-            {/* Desktop: PRÓXIMA */}
-            <p className="hidden md:block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Próxima
-            </p>
-            {/* Mobile: Cheia/Seca em Xh Xm */}
-            <p className="md:hidden text-xs font-bold">
-              <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
-                {nextTide.type === "alta" ? "Cheia" : "Seca"} em
-              </span>
-              <span className="text-foreground">
-                {" "}{countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
-              </span>
-            </p>
-            {/* Desktop: Maré Alta/Baixa em: Xh Xm */}
-            <p className="hidden md:block text-sm font-bold">
-              <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
-                {nextTide.type === "alta" ? "Maré Alta" : "Maré Baixa"} em:
-              </span>
-              <span className="text-foreground">
-                {" "}{countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
-              </span>
-            </p>
-            {/* Progress line com animacao de onda */}
-            <style>{`
-              @keyframes waveFlow {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(0%); }
-              }
-              .wave-animation {
-                animation: waveFlow 2s ease-in-out infinite;
-              }
-            `}</style>
-            <div className="mt-2 flex items-center justify-end">
-              <div className="relative h-[4px] w-[120px] md:w-[180px] bg-muted-foreground/20 rounded-full">
-                {(() => {
-                  // Calculate progress between previous tide and next tide
-                  const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
-                  const prevTide = prevTideIndex >= 0 ? tides[prevTideIndex] : { ...tides[tides.length - 1], hour: tides[tides.length - 1].hour - 24 }
-                  const totalDuration = nextTide.hour - prevTide.hour
-                  const elapsed = currentHour - prevTide.hour
-                  const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100)
-                  const tideColor = nextTide.type === "alta" ? "sky" : "teal"
-                  return (
-                    <>
-                      {/* Base fixa - cor clara */}
-                      <div 
-                        className={`absolute left-0 top-0 h-full rounded-full transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400/45" : "bg-teal-400/45"}`}
-                        style={{ width: `${progress}%` }}
-                      />
-                      {/* Wave animada - gradiente que simula onda */}
-                      <div 
-                        className="absolute left-0 top-0 h-full overflow-hidden rounded-full"
-                        style={{ width: `${progress}%` }}
-                      >
+            <h3 className="text-lg font-bold text-foreground">
+              Tabela de Marés de Hoje
+            </h3>
+          </div>
+          {nextTide && (
+            <div className="text-right min-w-[140px]">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Próxima
+              </p>
+              <p className="text-sm font-bold">
+                <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
+                  {nextTide.type === "alta" ? "Maré Alta" : "Maré Baixa"} em:
+                </span>
+                <span className="text-foreground">
+                  {" "}{countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
+                </span>
+              </p>
+              <style>{`
+                @keyframes waveFlow {
+                  0% { transform: translateX(-100%); }
+                  100% { transform: translateX(0%); }
+                }
+                .wave-animation {
+                  animation: waveFlow 2s ease-in-out infinite;
+                }
+              `}</style>
+              <div className="mt-2 flex items-center justify-end">
+                <div className="relative h-[4px] w-[180px] bg-muted-foreground/20 rounded-full">
+                  {(() => {
+                    const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
+                    const prevTide = prevTideIndex >= 0 ? tides[prevTideIndex] : { ...tides[tides.length - 1], hour: tides[tides.length - 1].hour - 24 }
+                    const totalDuration = nextTide.hour - prevTide.hour
+                    const elapsed = currentHour - prevTide.hour
+                    const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100)
+                    const tideColor = nextTide.type === "alta" ? "sky" : "teal"
+                    return (
+                      <>
                         <div 
-                          className="wave-animation h-full w-[200%]"
-                          style={{ 
-                            background: tideColor === "sky" 
-                              ? 'linear-gradient(90deg, rgba(56,189,248,0) 0%, rgba(56,189,248,0.8) 60%, rgba(255,255,255,1) 100%)'
-                              : 'linear-gradient(90deg, rgba(45,212,191,0) 0%, rgba(45,212,191,0.8) 60%, rgba(255,255,255,1) 100%)'
-                          }}
+                          className={`absolute left-0 top-0 h-full rounded-full transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400/45" : "bg-teal-400/45"}`}
+                          style={{ width: `${progress}%` }}
                         />
-                      </div>
-                      {/* Ponto circular com glow */}
-                      <div 
-                        className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_8px_2px_rgba(56,189,248,0.6)]" : "bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)]"}`}
-                        style={{ left: `calc(${progress}% - 6px)` }}
-                      />
-                    </>
-                  )
-                })()}
+                        <div 
+                          className="absolute left-0 top-0 h-full overflow-hidden rounded-full"
+                          style={{ width: `${progress}%` }}
+                        >
+                          <div 
+                            className="wave-animation h-full w-[200%]"
+                            style={{ 
+                              background: tideColor === "sky" 
+                                ? 'linear-gradient(90deg, rgba(56,189,248,0) 0%, rgba(56,189,248,0.8) 60%, rgba(255,255,255,1) 100%)'
+                                : 'linear-gradient(90deg, rgba(45,212,191,0) 0%, rgba(45,212,191,0.8) 60%, rgba(255,255,255,1) 100%)'
+                            }}
+                          />
+                        </div>
+                        <div 
+                          className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_8px_2px_rgba(56,189,248,0.6)]" : "bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)]"}`}
+                          style={{ left: `calc(${progress}% - 6px)` }}
+                        />
+                      </>
+                    )
+                  })()}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Mobile: layout empilhado */}
+        <div className="md:hidden">
+          <h3 className="text-sm font-bold text-foreground mb-2">
+            Marés Hoje
+          </h3>
+          {nextTide && (
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Próxima Maré
+              </p>
+              <p className="text-xs font-bold">
+                <span className={nextTide.type === "alta" ? "text-sky-400" : "text-teal-400"}>
+                  {nextTide.type === "alta" ? "Cheia" : "Seca"} em
+                </span>
+                <span className="text-foreground">
+                  {" "}{countdown.hours > 0 ? `${countdown.hours}h ${countdown.minutes}m` : `${countdown.minutes}m`}
+                </span>
+              </p>
+              <style>{`
+                @keyframes waveFlowMobile {
+                  0% { transform: translateX(-100%); }
+                  100% { transform: translateX(0%); }
+                }
+                .wave-animation-mobile {
+                  animation: waveFlowMobile 2s ease-in-out infinite;
+                }
+              `}</style>
+              <div className="mt-2">
+                <div className="relative h-[4px] w-[120px] bg-muted-foreground/20 rounded-full">
+                  {(() => {
+                    const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
+                    const prevTide = prevTideIndex >= 0 ? tides[prevTideIndex] : { ...tides[tides.length - 1], hour: tides[tides.length - 1].hour - 24 }
+                    const totalDuration = nextTide.hour - prevTide.hour
+                    const elapsed = currentHour - prevTide.hour
+                    const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100)
+                    const tideColor = nextTide.type === "alta" ? "sky" : "teal"
+                    return (
+                      <>
+                        <div 
+                          className={`absolute left-0 top-0 h-full rounded-full transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400/45" : "bg-teal-400/45"}`}
+                          style={{ width: `${progress}%` }}
+                        />
+                        <div 
+                          className="absolute left-0 top-0 h-full overflow-hidden rounded-full"
+                          style={{ width: `${progress}%` }}
+                        >
+                          <div 
+                            className="wave-animation-mobile h-full w-[200%]"
+                            style={{ 
+                              background: tideColor === "sky" 
+                                ? 'linear-gradient(90deg, rgba(56,189,248,0) 0%, rgba(56,189,248,0.8) 60%, rgba(255,255,255,1) 100%)'
+                                : 'linear-gradient(90deg, rgba(45,212,191,0) 0%, rgba(45,212,191,0.8) 60%, rgba(255,255,255,1) 100%)'
+                            }}
+                          />
+                        </div>
+                        <div 
+                          className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_8px_2px_rgba(56,189,248,0.6)]" : "bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)]"}`}
+                          style={{ left: `calc(${progress}% - 6px)` }}
+                        />
+                      </>
+                    )
+                  })()}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Mini tide curve - sem bordas arredondadas nas laterais */}
