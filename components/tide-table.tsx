@@ -199,8 +199,24 @@ export function TideTable({ lat }: TideTableProps) {
                 0% { transform: translateX(-100%); }
                 100% { transform: translateX(0%); }
               }
+              @keyframes dotPulse {
+                0%, 80% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(56,189,248,0.7); }
+                90% { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 16px 6px rgba(56,189,248,0.9); }
+                100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(56,189,248,0.7); }
+              }
+              @keyframes dotPulseTeal {
+                0%, 80% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(45,212,191,0.7); }
+                90% { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 16px 6px rgba(45,212,191,0.9); }
+                100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(45,212,191,0.7); }
+              }
               .wave-animation {
                 animation: waveFlow 2s ease-in-out infinite;
+              }
+              .dot-pulse-sky {
+                animation: dotPulse 2s ease-in-out infinite;
+              }
+              .dot-pulse-teal {
+                animation: dotPulseTeal 2s ease-in-out infinite;
               }
             `}</style>
             <div className="mt-2 flex items-center justify-end">
@@ -217,26 +233,27 @@ export function TideTable({ lat }: TideTableProps) {
                     <>
                       {/* Base fixa - cor clara */}
                       <div 
-                        className={`absolute left-0 top-0 h-full rounded-full transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400/50" : "bg-teal-400/50"}`}
+                        className={`absolute left-0 top-0 h-full rounded-full transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400/45" : "bg-teal-400/45"}`}
                         style={{ width: `${progress}%` }}
                       />
-                      {/* Wave animada - cor mais forte */}
+                      {/* Wave animada - gradiente que simula onda */}
                       <div 
-                        className="absolute left-0 top-0 h-full overflow-hidden rounded-full z-0"
-                        style={{ width: `${progress}%`, maxWidth: '100%' }}
+                        className="absolute left-0 top-0 h-full overflow-hidden rounded-full"
+                        style={{ width: `${progress}%` }}
                       >
                         <div 
-                          className={`wave-animation h-full w-[200%] rounded-full ${tideColor === "sky" ? "bg-gradient-to-r from-sky-500 via-sky-400 to-sky-500" : "bg-gradient-to-r from-teal-500 via-teal-400 to-teal-500"}`}
+                          className="wave-animation h-full w-[200%]"
                           style={{ 
-                            filter: 'blur(0.5px)',
-                            opacity: 0.9
+                            background: tideColor === "sky" 
+                              ? 'linear-gradient(90deg, rgba(56,189,248,0) 0%, rgba(56,189,248,0.8) 60%, rgba(255,255,255,1) 100%)'
+                              : 'linear-gradient(90deg, rgba(45,212,191,0) 0%, rgba(45,212,191,0.8) 60%, rgba(255,255,255,1) 100%)'
                           }}
                         />
                       </div>
-                      {/* Ponto circular com glow - fora do overflow */}
+                      {/* Ponto circular com glow e pulso sincronizado */}
                       <div 
-                        className={`absolute top-1/2 -translate-y-1/2 w-[14px] h-[14px] rounded-full border-2 border-card transition-all duration-[600ms] ease-out z-10 ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_10px_3px_rgba(56,189,248,0.7)]" : "bg-teal-400 shadow-[0_0_10px_3px_rgba(45,212,191,0.7)]"}`}
-                        style={{ left: `calc(${progress}% - 7px)` }}
+                        className={`absolute top-1/2 left-0 w-[12px] h-[12px] rounded-full border-2 border-card z-10 ${tideColor === "sky" ? "bg-sky-300 dot-pulse-sky" : "bg-teal-300 dot-pulse-teal"}`}
+                        style={{ left: `${progress}%` }}
                       />
                     </>
                   )
