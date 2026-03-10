@@ -329,27 +329,17 @@ export function TideTable({ lat }: TideTableProps) {
             )
           })()}
 
-          {/* Hour markers */}
+          {/* Hour markers - apenas linhas verticais */}
           {[0, 6, 12, 18, 24].map(h => (
-            <g key={h}>
-              <line
-                x1={toSvgX(h)}
-                y1={pad}
-                x2={toSvgX(h)}
-                y2={svgH - pad}
-                stroke="rgba(255,255,255,0.06)"
-                strokeWidth="0.5"
-              />
-              <text
-                x={toSvgX(h)}
-                y={svgH - 1}
-                fill="rgba(255,255,255,0.3)"
-                fontSize="6"
-                textAnchor="middle"
-              >
-                {h === 24 ? "00" : String(h).padStart(2, "0")}h
-              </text>
-            </g>
+            <line
+              key={h}
+              x1={toSvgX(h)}
+              y1={pad}
+              x2={toSvgX(h)}
+              y2={svgH - pad}
+              stroke="rgba(255,255,255,0.06)"
+              strokeWidth="0.5"
+            />
           ))}
 
           {/* Tide extreme dots */}
@@ -386,6 +376,14 @@ export function TideTable({ lat }: TideTableProps) {
             className="now-line"
           />
         </svg>
+        {/* Hour labels fora do SVG para nao distorcer */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between px-[2.5%] pb-0.5">
+          {[0, 6, 12, 18, 24].map(h => (
+            <span key={h} className="text-[9px] md:text-[10px] text-muted-foreground/40">
+              {h === 24 ? "00" : String(h).padStart(2, "0")}h
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Tide cards - com padding interno */}
