@@ -436,20 +436,19 @@ export function TideTable({ lat }: TideTableProps) {
         })}
         {/* Current time indicator - fora do SVG */}
         <div
-          className="absolute top-[12.5%] bottom-[12.5%] w-[1px]"
+          className="absolute top-[12.5%] bottom-[12.5%] w-[2px] now-line"
           style={{
             left: `${(pad / svgW * 100) + (currentHour / 24) * ((svgW - pad * 2) / svgW * 100)}%`,
-            background: 'repeating-linear-gradient(to bottom, rgba(244,63,94,0.5) 0px, rgba(244,63,94,0.5) 2px, transparent 2px, transparent 5px)',
+            background: 'repeating-linear-gradient(to bottom, #f43f5e 0px, #f43f5e 3px, transparent 3px, transparent 6px)',
             transform: 'translateX(-50%)'
           }}
         />
         <div
-          className="absolute w-[6px] h-[6px] md:w-[8px] md:h-[8px] rounded-full border border-[#121214]"
+          className="absolute w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-[#f43f5e] border-2 border-[#121214] now-line"
           style={{
             left: `${(pad / svgW * 100) + (currentHour / 24) * ((svgW - pad * 2) / svgW * 100)}%`,
             top: `${(pad / svgH * 100) + (1 - (curve[closestIdx].y - minY) / rangeY) * ((svgH - pad * 2) / svgH * 100)}%`,
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgba(244,63,94,0.6)'
+            transform: 'translate(-50%, -50%)'
           }}
         />
         {/* Hour labels fora do SVG para nao distorcer */}
