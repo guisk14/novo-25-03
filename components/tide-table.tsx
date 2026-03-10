@@ -199,24 +199,8 @@ export function TideTable({ lat }: TideTableProps) {
                 0% { transform: translateX(-100%); }
                 100% { transform: translateX(0%); }
               }
-              @keyframes dotPulse {
-                0%, 80% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(56,189,248,0.7); }
-                90% { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 16px 6px rgba(56,189,248,0.9); }
-                100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(56,189,248,0.7); }
-              }
-              @keyframes dotPulseTeal {
-                0%, 80% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(45,212,191,0.7); }
-                90% { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 16px 6px rgba(45,212,191,0.9); }
-                100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px 3px rgba(45,212,191,0.7); }
-              }
               .wave-animation {
                 animation: waveFlow 2s ease-in-out infinite;
-              }
-              .dot-pulse-sky {
-                animation: dotPulse 2s ease-in-out infinite;
-              }
-              .dot-pulse-teal {
-                animation: dotPulseTeal 2s ease-in-out infinite;
               }
             `}</style>
             <div className="mt-2 flex items-center justify-end">
@@ -250,10 +234,10 @@ export function TideTable({ lat }: TideTableProps) {
                           }}
                         />
                       </div>
-                      {/* Ponto circular com glow e pulso sincronizado */}
+                      {/* Ponto circular com glow */}
                       <div 
-                        className={`absolute top-1/2 left-0 w-[12px] h-[12px] rounded-full border-2 border-card z-10 ${tideColor === "sky" ? "bg-sky-300 dot-pulse-sky" : "bg-teal-300 dot-pulse-teal"}`}
-                        style={{ left: `${progress}%` }}
+                        className={`absolute top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full border-2 border-card z-10 transition-all duration-[600ms] ease-out ${tideColor === "sky" ? "bg-sky-400 shadow-[0_0_8px_2px_rgba(56,189,248,0.6)]" : "bg-teal-400 shadow-[0_0_8px_2px_rgba(45,212,191,0.6)]"}`}
+                        style={{ left: `calc(${progress}% - 6px)` }}
                       />
                     </>
                   )
