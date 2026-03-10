@@ -461,6 +461,37 @@ export function TideTable({ lat }: TideTableProps) {
         </div>
       </div>
 
+      {/* Status atual da mare - subindo ou descendo */}
+      {mounted && nextTide && (
+        <div className="flex items-center justify-center gap-2 px-4 pb-3 md:px-5">
+          {(() => {
+            const isRising = nextTide.type === "alta"
+            return (
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
+                isRising 
+                  ? "border-sky-400/30 bg-sky-400/5" 
+                  : "border-teal-400/30 bg-teal-400/5"
+              }`}>
+                <div className={`flex items-center justify-center w-5 h-5 rounded-full ${
+                  isRising ? "bg-sky-400/20" : "bg-teal-400/20"
+                }`}>
+                  {isRising ? (
+                    <ArrowUp className="w-3 h-3 text-sky-400" />
+                  ) : (
+                    <ArrowDown className="w-3 h-3 text-teal-400" />
+                  )}
+                </div>
+                <span className={`text-xs font-medium ${
+                  isRising ? "text-sky-400" : "text-teal-400"
+                }`}>
+                  Maré {isRising ? "subindo" : "descendo"}
+                </span>
+              </div>
+            )
+          })()}
+        </div>
+      )}
+
       {/* Tide cards - com padding interno */}
       <div className="grid grid-cols-2 gap-1.5 md:grid-cols-4 md:gap-3 px-4 pb-4 md:px-5 md:pb-5">
         {tides.map((tide, i) => {
