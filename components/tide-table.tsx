@@ -189,8 +189,8 @@ export function TideTable({ lat }: TideTableProps) {
               {nextTide.type === "alta" ? "Mare Alta" : "Mare Baixa"} em {countdown.hours}h {countdown.minutes}m
             </p>
             {/* Progress line */}
-            <div className="mt-1.5 flex items-center gap-1">
-              <div className="relative h-[2px] flex-1 bg-muted-foreground/20 rounded-full overflow-hidden">
+            <div className="mt-2 flex items-center gap-1">
+              <div className="relative h-[3px] flex-1 bg-muted-foreground/30 rounded-full">
                 {(() => {
                   // Calculate progress between previous tide and next tide
                   const prevTideIndex = tides.findIndex(t => t === nextTide) - 1
@@ -201,12 +201,12 @@ export function TideTable({ lat }: TideTableProps) {
                   return (
                     <>
                       <div 
-                        className="absolute left-0 top-0 h-full bg-primary/60 rounded-full"
+                        className="absolute left-0 top-0 h-full bg-primary rounded-full"
                         style={{ width: `${progress}%` }}
                       />
                       <div 
-                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full shadow-sm shadow-primary/50"
-                        style={{ left: `calc(${progress}% - 4px)` }}
+                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-md shadow-primary/60 border-2 border-background"
+                        style={{ left: `calc(${progress}% - 6px)` }}
                       />
                     </>
                   )
