@@ -342,40 +342,40 @@ export function TideTable({ lat }: TideTableProps) {
             />
           ))}
 
-          {/* Tide extreme dots */}
-          {tides.map((t, i) => (
-            <circle
-              key={i}
-              cx={toSvgX(t.hour)}
-              cy={toSvgY(t.height)}
-              r="2.5"
-              fill={t.type === "alta" ? "#38bdf8" : "#2dd4bf"}
-              stroke="#121214"
-              strokeWidth="1"
-            />
-          ))}
-
-          {/* Current time indicator com animacao pulse */}
-          <line
-            x1={nowX}
-            y1={pad}
-            x2={nowX}
-            y2={svgH - pad}
-            stroke="#f43f5e"
-            strokeWidth="1"
-            strokeDasharray="2 2"
-            className="now-line"
-          />
-          <circle
-            cx={nowX}
-            cy={nowY}
-            r="3"
-            fill="#f43f5e"
-            stroke="#121214"
-            strokeWidth="1.5"
-            className="now-line"
-          />
         </svg>
+        {/* Tide extreme dots - fora do SVG para nao distorcer */}
+        {tides.map((t, i) => {
+          const xPercent = (pad / svgW * 100) + (t.hour / 24) * ((svgW - pad * 2) / svgW * 100)
+          const yPercent = (pad / svgH * 100) + (1 - (t.height - minY) / rangeY) * ((svgH - pad * 2) / svgH * 100)
+          return (
+            <div
+              key={i}
+              className={`absolute w-[6px] h-[6px] md:w-[7px] md:h-[7px] rounded-full border border-[#121214] ${t.type === "alta" ? "bg-sky-400" : "bg-teal-400"}`}
+              style={{
+                left: `${xPercent}%`,
+                top: `${yPercent}%`,
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          )
+        })}
+        {/* Current time indicator - fora do SVG */}
+        <div
+          className="absolute top-[12.5%] bottom-[12.5%] w-[2px] now-line"
+          style={{
+            left: `${(pad / svgW * 100) + (currentHour / 24) * ((svgW - pad * 2) / svgW * 100)}%`,
+            background: 'repeating-linear-gradient(to bottom, #f43f5e 0px, #f43f5e 3px, transparent 3px, transparent 6px)',
+            transform: 'translateX(-50%)'
+          }}
+        />
+        <div
+          className="absolute w-[8px] h-[8px] md:w-[10px] md:h-[10px] rounded-full bg-[#f43f5e] border-2 border-[#121214] now-line"
+          style={{
+            left: `${(pad / svgW * 100) + (currentHour / 24) * ((svgW - pad * 2) / svgW * 100)}%`,
+            top: `${(pad / svgH * 100) + (1 - (curve[closestIdx].y - minY) / rangeY) * ((svgH - pad * 2) / svgH * 100)}%`,
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
         {/* Hour labels fora do SVG para nao distorcer */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-between px-[2.5%] pb-0.5">
           {[0, 6, 12, 18, 24].map(h => (
