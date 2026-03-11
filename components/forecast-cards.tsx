@@ -175,8 +175,8 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
         label={CARD_THEMES.altura.label}
         value={formatNum(data.currentHeight, 1)}
         unit="m"
-        accentColor={heightColors.accent}
-        glowBg={heightColors.glow}
+        accentColor={CARD_THEMES.altura.accent}
+        glowBg="rgba(56,189,248,0.1)"
       />
 
       <MetricCard
