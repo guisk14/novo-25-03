@@ -75,8 +75,10 @@ export function windColor(type: string, intensity: string): string {
   if (type === "MARAL" && (intensity === "MODERADO" || intensity === "FORTE")) return "#ef4444"
   // LATERAL FRACO verde (aceitavel)
   if (type === "LATERAL" && intensity === "FRACO") return "#10b981"
-  // LATERAL MODERADO ou FORTE vermelho
-  if (type === "LATERAL" && (intensity === "MODERADO" || intensity === "FORTE")) return "#ef4444"
+  // LATERAL MODERADO amarelo
+  if (type === "LATERAL" && intensity === "MODERADO") return "#f59e0b"
+  // LATERAL FORTE vermelho
+  if (type === "LATERAL" && intensity === "FORTE") return "#ef4444"
   return "#f59e0b"
 }
 
