@@ -6,7 +6,7 @@ import { Waves, Menu, X } from "lucide-react"
 const navLinks = [
   { label: "Inicio", href: "/", active: true },
   { label: "Previsao", href: "#" },
-  { label: "Comunidade", href: "#" },
+  { label: "Comunidade", href: "/comunidade" },
   { label: "Contato", href: "/contato" },
 ]
 

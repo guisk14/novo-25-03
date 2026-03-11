@@ -4,9 +4,9 @@ const footerLinks = [
   {
     title: "Navegacao",
     links: [
-      { label: "Inicio", href: "#" },
+      { label: "Inicio", href: "/" },
       { label: "Previsao", href: "#" },
-      { label: "Comunidade", href: "#" },
+      { label: "Comunidade", href: "/comunidade" },
       { label: "Contato", href: "/contato" },
     ],
   },
