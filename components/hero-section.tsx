@@ -3,13 +3,7 @@
 import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 
-interface HeroSectionProps {
-  currentHeight?: number
-  currentPeriod?: number
-  currentWind?: number
-}
-
-export function HeroSection({ currentHeight, currentPeriod, currentWind }: HeroSectionProps) {
+export function HeroSection() {
   const scrollToContent = () => {
     const element = document.getElementById("forecast-content")
     if (element) {
@@ -97,37 +91,100 @@ export function HeroSection({ currentHeight, currentPeriod, currentWind }: HeroS
             <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
           </button>
 
-          {/* Quick Stats */}
-          <div className="mt-10 flex items-center gap-4 md:gap-6">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentHeight?.toFixed(1) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">m</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Altura</span>
-            </div>
-            <span className="text-white/20">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentPeriod?.toFixed(0) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">s</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Periodo</span>
-            </div>
-            <span className="text-white/20">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentWind?.toFixed(0) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">km/h</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Vento</span>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Bottom fade line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-500/30 to-transparent" />
+      {/* Animated Waves at Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 overflow-hidden">
+        {/* Wave 1 - Back */}
+        <svg 
+          className="absolute bottom-0 w-[200%] h-full animate-wave-slow opacity-20"
+          viewBox="0 0 1440 120" 
+          preserveAspectRatio="none"
+        >
+          <path 
+            d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120 Z" 
+            fill="url(#waveGrad1)"
+          />
+          <defs>
+            <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0ea5e9" />
+              <stop offset="50%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0ea5e9" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Wave 2 - Middle */}
+        <svg 
+          className="absolute bottom-0 w-[200%] h-full animate-wave-medium opacity-30"
+          viewBox="0 0 1440 120" 
+          preserveAspectRatio="none"
+        >
+          <path 
+            d="M0,80 C360,20 720,100 1080,40 C1260,10 1380,60 1440,80 L1440,120 L0,120 Z" 
+            fill="url(#waveGrad2)"
+          />
+          <defs>
+            <linearGradient id="waveGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="50%" stopColor="#22d3ee" />
+              <stop offset="100%" stopColor="#38bdf8" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Wave 3 - Front */}
+        <svg 
+          className="absolute bottom-0 w-[200%] h-full animate-wave-fast opacity-40"
+          viewBox="0 0 1440 120" 
+          preserveAspectRatio="none"
+        >
+          <path 
+            d="M0,90 C180,60 360,100 540,70 C720,40 900,90 1080,60 C1260,30 1380,70 1440,90 L1440,120 L0,120 Z" 
+            fill="url(#waveGrad3)"
+          />
+          <defs>
+            <linearGradient id="waveGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#22d3ee" />
+              <stop offset="50%" stopColor="#67e8f9" />
+              <stop offset="100%" stopColor="#22d3ee" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      {/* Bottom gradient fade to page */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(18,18,20,1) 0%, transparent 100%)"
+        }}
+      />
+
+      <style jsx>{`
+        @keyframes wave-slow {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes wave-medium {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        @keyframes wave-fast {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-wave-slow {
+          animation: wave-slow 20s linear infinite;
+        }
+        .animate-wave-medium {
+          animation: wave-medium 15s linear infinite;
+        }
+        .animate-wave-fast {
+          animation: wave-fast 10s linear infinite;
+        }
+      `}</style>
     </section>
   )
 }

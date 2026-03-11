@@ -57,11 +57,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background" style={{ background: "radial-gradient(circle at top center, #1f1f22, #121214)" }}>
       <Topbar />
 
-      <HeroSection 
-        currentHeight={data?.currentWaveHeight}
-        currentPeriod={data?.currentWavePeriod}
-        currentWind={data?.currentWindSpeed}
-      />
+      <HeroSection />
 
       <div id="forecast-content" className="mx-auto flex max-w-[1440px] flex-col gap-6 p-6 lg:flex-row lg:p-8">
         {/* Left panel */}
