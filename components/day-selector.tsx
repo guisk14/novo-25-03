@@ -35,10 +35,10 @@ export function DaySelector({ segments, selectedIdx, onSelect }: DaySelectorProp
             {isToday && !isActive && (
               <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-primary animate-pulse" />
             )}
-            <span className="text-[0.5rem] sm:text-xs font-extrabold tracking-wider leading-none">
+            <span className={`text-[0.5rem] sm:text-sm font-bold tracking-wider leading-none ${isActive ? "text-white" : ""}`}>
               {seg.shortLabel}
             </span>
-            <span className={`text-xs sm:text-base font-black leading-none mt-0.5 sm:mt-0 ${isActive ? "text-white" : "text-foreground/70"}`}>
+            <span className={`text-xs sm:text-sm font-bold leading-none mt-0.5 sm:mt-0 ${isActive ? "text-white" : "text-foreground/70"}`}>
               {seg.number}
             </span>
           </button>
