@@ -90,9 +90,13 @@ interface MetricCardProps {
 function MetricCard({ icon, label, value, unit, subtitle, accentColor, glowBg }: MetricCardProps) {
   return (
     <div
-      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-6 min-h-[120px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1 bg-card border border-border"
+      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-6 min-h-[120px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1 bg-card"
       style={{
         borderTop: `3px solid ${accentColor}`,
+        border: `1px solid rgba(255,255,255,0.05)`,
+        borderTopWidth: "3px",
+        borderTopColor: accentColor,
+        boxShadow: `0 4px 20px rgba(0,0,0,0.2)`,
       }}
     >
       {/* Glow background on hover */}
