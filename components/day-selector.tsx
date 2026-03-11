@@ -11,7 +11,7 @@ export function DaySelector({ segments, selectedIdx, onSelect }: DaySelectorProp
 
   return (
     <div
-      className="mb-4 grid gap-1 sm:gap-1.5"
+      className="mb-4 grid gap-2.5 sm:gap-3"
       style={{ gridTemplateColumns: `repeat(${segments.length}, minmax(0, 1fr))` }}
     >
       {segments.map((seg, idx) => {
@@ -24,10 +24,10 @@ export function DaySelector({ segments, selectedIdx, onSelect }: DaySelectorProp
             type="button"
             onClick={() => onSelect(idx)}
             className={`
-              relative flex flex-col items-center justify-center rounded-lg sm:rounded-xl px-1 sm:px-3 py-1.5 sm:py-2
+              relative flex flex-col items-center justify-center rounded-lg sm:rounded-xl px-1 sm:px-3 py-2 sm:py-2.5
               text-center font-bold uppercase transition-all duration-200 cursor-pointer
               ${isActive
-                ? "bg-primary text-primary-foreground shadow-[0_0_12px_rgba(56,189,248,0.3)]"
+                ? "bg-sky-500 text-white shadow-[0_4px_12px_rgba(56,189,248,0.35)]"
                 : "bg-[rgba(255,255,255,0.04)] text-muted-foreground hover:bg-[rgba(255,255,255,0.08)] hover:text-foreground"
               }
             `}
@@ -38,7 +38,7 @@ export function DaySelector({ segments, selectedIdx, onSelect }: DaySelectorProp
             <span className="text-[0.5rem] sm:text-xs font-extrabold tracking-wider leading-none">
               {seg.shortLabel}
             </span>
-            <span className={`text-xs sm:text-lg font-black leading-none mt-0.5 ${isActive ? "text-primary-foreground" : "text-foreground/70"}`}>
+            <span className={`text-xs sm:text-lg font-black leading-none mt-0.5 ${isActive ? "text-white" : "text-foreground/70"}`}>
               {seg.number}
             </span>
           </button>
