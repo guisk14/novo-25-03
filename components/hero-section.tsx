@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronDown } from "lucide-react"
+import Image from "next/image"
 
 export function HeroSection() {
   const scrollToContent = () => {
@@ -12,14 +13,26 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-[50vh] md:min-h-[60vh] flex-col items-center justify-center overflow-hidden px-4 py-12 md:py-16">
-      {/* Animated wave background */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/hero-wave.jpg"
+          alt="Ocean wave"
+          fill
+          className="object-cover opacity-30"
+          priority
+        />
+        {/* Dark overlay gradient */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-32 md:h-48 opacity-20"
+          className="absolute inset-0"
           style={{
-            background: "linear-gradient(180deg, transparent 0%, rgba(56,189,248,0.3) 100%)"
+            background: "linear-gradient(180deg, rgba(18,18,20,0.7) 0%, rgba(18,18,20,0.9) 100%)"
           }}
         />
+      </div>
+
+      {/* Animated wave overlay */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <svg
           className="absolute bottom-0 left-0 w-[200%] h-24 md:h-32 opacity-30 animate-wave"
           viewBox="0 0 1440 120"
