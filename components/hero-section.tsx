@@ -88,7 +88,7 @@ export function HeroSection() {
           {/* CTA Button */}
           <button
             onClick={scrollToContent}
-            className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm md:text-base transition-all duration-300 shadow-lg shadow-sky-500/25 hover:shadow-sky-400/40 hover:shadow-xl"
+            className="group inline-flex items-center gap-2 px-6 py-3.5 mt-3 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm md:text-base transition-all duration-300 shadow-lg shadow-sky-500/25 hover:shadow-sky-400/40 hover:shadow-xl"
           >
             <span>Ver previsao</span>
             <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
