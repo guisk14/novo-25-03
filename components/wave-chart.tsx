@@ -224,7 +224,7 @@ export function WaveChart({ data }: WaveChartProps) {
           Condição das Ondas
         </h3>
         <p className="text-[12px] text-muted-foreground/60 mt-1 text-center md:text-left">
-          altura, período e vento
+          Altura <span className="mx-1">•</span> Período <span className="mx-1">•</span> Vento
         </p>
       </div>
 
