@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import { Waves, Menu, X } from "lucide-react"
 
 const navLinks = [
-  { label: "Inicio", href: "#", active: true },
+  { label: "Inicio", href: "/", active: true },
   { label: "Previsao", href: "#" },
   { label: "Comunidade", href: "#" },
-  { label: "Contato", href: "#" },
+  { label: "Contato", href: "/contato" },
 ]
 
 export function Topbar() {
