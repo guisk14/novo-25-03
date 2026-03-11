@@ -99,7 +99,7 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
       {/* Wind Table */}
       <div className="rounded-xl border border-border bg-card p-5">
         <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-foreground">
-          {"Direcao do Vento (Maral / Terral) — "}
+          {"Direção do Vento "}
           <span className="text-primary">{beachName}</span>
         </h3>
 
