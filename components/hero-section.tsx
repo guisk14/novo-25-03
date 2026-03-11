@@ -79,48 +79,55 @@ export function HeroSection({ currentHeight, currentPeriod, currentWind }: HeroS
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6 text-balance">
+          <h1 
+            className="text-[32px] md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6 text-balance"
+            style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
+          >
             Veja quando as melhores ondas vao chegar
           </h1>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-white/70 leading-relaxed mb-8 max-w-lg">
+          <p className="text-base md:text-lg text-white/85 leading-relaxed mb-8 max-w-lg">
             Dados atualizados de swell, vento e mare para acompanhar as condicoes do seu pico.
           </p>
 
           {/* CTA Button */}
           <button
             onClick={scrollToContent}
-            className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm md:text-base transition-all duration-300 shadow-lg shadow-sky-500/25 hover:shadow-sky-400/40 hover:shadow-xl"
+            className="group inline-flex items-center gap-2 px-6 py-3.5 mt-6 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm md:text-base transition-all duration-300 shadow-lg shadow-sky-500/25 hover:shadow-sky-400/40 hover:shadow-xl"
           >
             <span>Ver previsao</span>
             <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
           </button>
 
-          {/* Quick Stats */}
-          <div className="mt-10 flex items-center gap-4 md:gap-6">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentHeight?.toFixed(1) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">m</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Altura</span>
+          {/* Quick Stats - Mini Cards */}
+          <div className="mt-10 flex flex-wrap gap-3 md:gap-4">
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-white/50 font-medium mb-0.5">Altura</span>
+                <span className="text-xl md:text-2xl font-bold text-white">
+                  {currentHeight?.toFixed(1) ?? "—"}
+                  <span className="text-sm font-medium text-white/50 ml-0.5">m</span>
+                </span>
+              </div>
             </div>
-            <span className="text-white/20">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentPeriod?.toFixed(0) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">s</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Periodo</span>
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-white/50 font-medium mb-0.5">Periodo</span>
+                <span className="text-xl md:text-2xl font-bold text-white">
+                  {currentPeriod?.toFixed(0) ?? "—"}
+                  <span className="text-sm font-medium text-white/50 ml-0.5">s</span>
+                </span>
+              </div>
             </div>
-            <span className="text-white/20">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl md:text-3xl font-bold text-white">
-                {currentWind?.toFixed(0) ?? "—"}
-                <span className="text-base md:text-lg font-medium text-white/50 ml-0.5">km/h</span>
-              </span>
-              <span className="text-[10px] md:text-xs uppercase tracking-wider text-white/40 font-medium">Vento</span>
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-white/50 font-medium mb-0.5">Vento</span>
+                <span className="text-xl md:text-2xl font-bold text-white">
+                  {currentWind?.toFixed(0) ?? "—"}
+                  <span className="text-sm font-medium text-white/50 ml-0.5">km/h</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
