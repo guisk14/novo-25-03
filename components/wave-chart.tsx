@@ -219,12 +219,16 @@ export function WaveChart({ data }: WaveChartProps) {
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       {/* Title */}
-      <div className="px-4 pt-4 pb-2 md:px-5 md:pt-5">
-        <h3 className="text-lg font-semibold tracking-wide text-foreground text-center md:text-left">
+      <div className="px-4 pt-4 pb-2 md:px-5 md:pt-5 text-center md:text-left">
+        <h3 className="text-[18px] font-semibold tracking-wide text-foreground flex items-center justify-center md:justify-start gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" className="text-sky-400">
+            <path d="M2 12c2-3 4-4 6-4s4 1 6 4 4 4 6 4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M2 18c2-3 4-4 6-4s4 1 6 4 4 4 6 4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.5" />
+          </svg>
           Condição das Ondas
         </h3>
-        <p className="text-[12px] text-muted-foreground/60 mt-1 text-center md:text-left">
-          altura, período e vento
+        <p className="text-[12px] text-muted-foreground/[0.65] mt-1">
+          Altura <span className="mx-1 text-muted-foreground/40">•</span> Período <span className="mx-1 text-muted-foreground/40">•</span> Vento
         </p>
       </div>
 
