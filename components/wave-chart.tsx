@@ -357,11 +357,23 @@ export function WaveChart({ data }: WaveChartProps) {
           label="ALTURA"
           value={`${formatNum(point?.waveHeight, 1)} m`}
           color="text-sky-400"
+          icon={
+            <svg width="12" height="12" viewBox="0 0 24 24" className="text-sky-400 md:w-4 md:h-4">
+              <path d="M2 12c2-3 4-4 6-4s4 1 6 4 4 4 6 4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+              <path d="M2 18c2-3 4-4 6-4s4 1 6 4 4 4 6 4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.5" />
+            </svg>
+          }
         />
         <MetricItem
           label="PERIODO"
           value={`${formatNum(point?.wavePeriod, 1)} s`}
           color="text-red-400"
+          icon={
+            <svg width="12" height="12" viewBox="0 0 24 24" className="text-red-400 md:w-4 md:h-4">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
+              <path d="M12 7v5l3 3" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          }
         />
         <MetricItem
           label="DIRECAO"
@@ -405,18 +417,23 @@ function MetricItem({
   color,
   showArrow,
   arrowDeg,
+  icon,
 }: {
   label: string
   value: string
   color: string
   showArrow?: boolean
   arrowDeg?: number
+  icon?: React.ReactNode
 }) {
   return (
     <div className="flex flex-col items-center text-center min-w-0 flex-1">
-      <span className={`text-[7px] md:text-[9px] font-bold uppercase tracking-wide ${color} leading-tight`}>
-        {label}
-      </span>
+      <div className="flex items-center gap-1">
+        {icon && <span className="shrink-0">{icon}</span>}
+        <span className={`text-[7px] md:text-[9px] font-bold uppercase tracking-wide ${color} leading-tight`}>
+          {label}
+        </span>
+      </div>
       <div className="flex items-center gap-0.5 mt-0.5">
         {showArrow && typeof arrowDeg === "number" && (
           <svg
