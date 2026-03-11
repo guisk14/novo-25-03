@@ -6,6 +6,7 @@ import { BEACH_DATA } from "@/lib/beach-data"
 import type { Beach } from "@/lib/beach-data"
 import { fetchForecast, type ForecastData } from "@/lib/surf-utils"
 import { Topbar } from "@/components/topbar"
+import { Footer } from "@/components/footer"
 import { HeroSection } from "@/components/hero-section"
 import { BeachSelector } from "@/components/beach-selector"
 import { ForecastCards } from "@/components/forecast-cards"
@@ -104,6 +105,8 @@ export default function HomePage() {
           <SurfMap beach={beach} cityName={cityName} data={data ?? null} />
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }
