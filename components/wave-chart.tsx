@@ -274,7 +274,7 @@ export function WaveChart({ data }: WaveChartProps) {
           <path d={waveAreaPath2} fill="#5bb8d4" opacity={0.7} />
 
           {/* Period line - red */}
-          <path d={periodLinePath} fill="none" stroke="#dc2626" strokeWidth={2} opacity={0.9} />
+          <path d={periodLinePath} fill="none" stroke="#dc2626" strokeWidth={2} opacity={0.75} />
 
           {/* Day separator lines */}
           {dayGroups.slice(1).map((g, i) => (
