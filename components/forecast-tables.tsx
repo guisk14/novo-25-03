@@ -109,9 +109,9 @@ export function ForecastTables({ data, beachName, loading }: ForecastTablesProps
           <table className="w-full text-center md:text-left">
             <thead>
               <tr>
-                <th className="px-2 py-2 md:px-4 md:py-3 text-[11px] md:text-xs font-bold uppercase text-muted-foreground bg-[rgba(255,255,255,0.02)]">Hora</th>
-                <th className="px-2 py-2 md:px-4 md:py-3 text-[11px] md:text-xs font-bold uppercase text-muted-foreground bg-[rgba(255,255,255,0.02)]">Vento</th>
-                <th className="px-2 py-2 md:px-4 md:py-3 text-[11px] md:text-xs font-bold uppercase text-muted-foreground bg-[rgba(255,255,255,0.02)]">Tipo</th>
+                <th className="px-2 py-2 md:px-4 md:py-3 text-[10px] md:text-[11px] font-medium uppercase tracking-[0.05em] text-muted-foreground/60 bg-[rgba(255,255,255,0.02)]">Hora</th>
+                <th className="px-2 py-2 md:px-4 md:py-3 text-[10px] md:text-[11px] font-medium uppercase tracking-[0.05em] text-muted-foreground/60 bg-[rgba(255,255,255,0.02)]">Vento</th>
+                <th className="px-2 py-2 md:px-4 md:py-3 text-[10px] md:text-[11px] font-medium uppercase tracking-[0.05em] text-muted-foreground/60 bg-[rgba(255,255,255,0.02)]">Tipo</th>
               </tr>
             </thead>
             <tbody>
