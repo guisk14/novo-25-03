@@ -1,3 +1,5 @@
+"use client"
+
 import { Waves, MapPin, Clock, TrendingUp } from "lucide-react"
 
 const steps = [
@@ -70,13 +72,15 @@ export function HowItWorks() {
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <a
-            href="#forecast-content"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-background transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+          <button
+            onClick={() => {
+              document.getElementById("forecast-content")?.scrollIntoView({ behavior: "smooth" })
+            }}
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-background transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:scale-105 active:scale-100"
           >
-            <Waves className="h-4 w-4" />
+            <Waves className="h-5 w-5" />
             Ver previsao agora
-          </a>
+          </button>
         </div>
       </div>
     </section>
