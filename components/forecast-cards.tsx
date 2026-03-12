@@ -63,7 +63,7 @@ function getHeightColor(height: number): { accent: string; bg: string; glow: str
 const CARD_THEMES = {
   altura: { accent: "#38bdf8", label: "Altura" },
   periodo: { accent: "#60a5fa", label: "Periodo" },
-  direcao: { accent: "#22d3ee", label: "Dir. Onda" },
+  direcao: { accent: "transparent", label: "Dir. Onda" },
   vento: { accent: "#34d399", label: "Vento" },
 }
 
@@ -192,8 +192,8 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
         icon={<CompassIcon className="h-5 w-5 sm:h-8 sm:w-8" rotation={data.currentDirection} />}
         label={CARD_THEMES.direcao.label}
         value={data.currentDirectionCompass}
-        accentColor={CARD_THEMES.direcao.accent}
-        glowBg="rgba(34,211,238,0.1)"
+        accentColor="#22d3ee"
+        glowBg="transparent"
       />
 
       <MetricCard
