@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useTheme } from "next-themes"
-import { Waves, Menu, X, Sun, Moon } from "lucide-react"
+import { Waves, Menu, X } from "lucide-react"
 
 const navLinks = [
   { label: "Inicio", href: "/", active: true },
@@ -14,12 +13,6 @@ const navLinks = [
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +24,7 @@ export function Topbar() {
 
   return (
     <header 
-      className={`sticky top-0 z-50 flex items-center justify-between backdrop-blur-[10px] bg-white/60 dark:bg-[rgba(10,15,25,0.6)] px-6 border-b border-black/5 dark:border-[rgba(255,255,255,0.06)] lg:px-8 lg:justify-start lg:gap-8 transition-all duration-300 ${
+      className={`sticky top-0 z-50 flex items-center justify-between backdrop-blur-[10px] bg-[rgba(10,15,25,0.6)] px-6 border-b border-[rgba(255,255,255,0.06)] lg:px-8 lg:justify-start lg:gap-8 transition-all duration-300 ${
         scrolled ? "py-3" : "py-4"
       }`}
     >
@@ -48,24 +41,8 @@ export function Topbar() {
         </h1>
       </div>
 
-      {/* Theme toggle */}
       <button
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 dark:bg-white/5 transition-colors hover:bg-black/10 dark:hover:bg-white/10 ml-auto lg:ml-0 lg:order-last"
-        aria-label="Alternar tema"
-      >
-        {mounted && (
-          theme === "dark" ? (
-            <Sun className="h-5 w-5 text-foreground" />
-          ) : (
-            <Moon className="h-5 w-5 text-foreground" />
-          )
-        )}
-      </button>
-
-      {/* Mobile menu button */}
-      <button
-        className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 dark:bg-white/5 lg:hidden transition-colors hover:bg-black/10 dark:hover:bg-white/10 ml-2"
+        className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 lg:hidden ml-auto transition-colors hover:bg-white/10"
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label="Menu"
       >
@@ -79,7 +56,7 @@ export function Topbar() {
       <nav
         className={`${
           menuOpen
-            ? "absolute top-full left-0 right-0 flex flex-col items-center bg-white/95 dark:bg-[rgba(24,24,27,0.95)] backdrop-blur-xl border-b border-border"
+            ? "absolute top-full left-0 right-0 flex flex-col items-center bg-[rgba(24,24,27,0.95)] backdrop-blur-xl border-b border-border"
             : "hidden"
         } lg:relative lg:top-auto lg:flex lg:bg-transparent lg:border-none lg:flex-1 lg:justify-center`}
       >
