@@ -61,7 +61,7 @@ export function HeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="text-[15px] text-white/85 leading-[1.6] mb-8 max-w-lg">
+          <p className="text-[15px] md:text-[20px] text-[rgba(255,255,255,0.82)] leading-[1.6] mb-8 max-w-[560px]">
             Dados atualizados de swell, vento e mare para acompanhar as condicoes do seu pico.
           </p>
 
