@@ -3,25 +3,9 @@
 import { useEffect, useState, useCallback } from "react"
 import { PostCard } from "./post-card"
 import { CreatePostForm } from "./create-post-form"
-import { getPosts, getUserLikes } from "@/app/comunidade/actions"
+import { getPosts, type Post } from "@/app/comunidade/actions"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
-
-interface Post {
-  id: string
-  content: string
-  image_url: string | null
-  beach_name: string | null
-  likes_count: number
-  comments_count: number
-  created_at: string
-  user_id: string
-  profiles: {
-    username: string | null
-    full_name: string | null
-    avatar_url: string | null
-  } | null
-}
 
 interface PostsFeedProps {
   currentUserId: string | null
@@ -29,51 +13,29 @@ interface PostsFeedProps {
 
 export function PostsFeed({ currentUserId }: PostsFeedProps) {
   const [posts, setPosts] = useState<Post[]>([])
-  const [userLikes, setUserLikes] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
 
-  const loadPosts = useCallback(async (pageNum: number, append = false) => {
-    const result = await getPosts(pageNum)
-    if (result.success && result.data) {
-      if (append) {
-        setPosts((prev) => [...prev, ...result.data!])
-      } else {
-        setPosts(result.data)
-      }
-      setHasMore(result.data.length === 10)
+  const loadPosts = useCallback(async () => {
+    try {
+      const result = await getPosts()
+      setPosts(result)
+    } catch (error) {
+      console.error("Error loading posts:", error)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [])
 
-  const loadUserLikes = useCallback(async () => {
-    if (!currentUserId) return
-    const result = await getUserLikes()
-    if (result.success && result.data) {
-      setUserLikes(new Set(result.data.map((like) => like.post_id)))
-    }
-  }, [currentUserId])
-
   useEffect(() => {
-    loadPosts(0)
-    loadUserLikes()
-  }, [loadPosts, loadUserLikes])
+    loadPosts()
+  }, [loadPosts])
 
   const handlePostCreated = () => {
-    setPage(0)
-    loadPosts(0)
+    loadPosts()
   }
 
   const handlePostDeleted = () => {
-    setPage(0)
-    loadPosts(0)
-  }
-
-  const loadMore = () => {
-    const nextPage = page + 1
-    setPage(nextPage)
-    loadPosts(nextPage, true)
+    loadPosts()
   }
 
   if (loading) {
@@ -111,19 +73,10 @@ export function PostsFeed({ currentUserId }: PostsFeedProps) {
               key={post.id}
               post={post}
               currentUserId={currentUserId}
-              userLiked={userLikes.has(post.id)}
+              userLiked={post.user_has_liked || false}
               onPostDeleted={handlePostDeleted}
             />
           ))}
-
-          {hasMore && (
-            <button
-              onClick={loadMore}
-              className="w-full py-3 text-sm text-primary hover:bg-primary/10 rounded-lg transition-colors"
-            >
-              Carregar mais
-            </button>
-          )}
         </>
       )}
     </div>
