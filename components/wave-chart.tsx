@@ -229,7 +229,7 @@ export function WaveChart({ data }: WaveChartProps) {
           Condição das Ondas
         </h3>
         <p className="text-[12px] text-muted-foreground/[0.65] mt-1">
-          Altura <span className="mx-1 text-muted-foreground/40">•</span> Período
+          Deslize ou mova o mouse no grafico para ver os detalhes
         </p>
       </div>
 
@@ -256,11 +256,11 @@ export function WaveChart({ data }: WaveChartProps) {
         {/* Tooltip showing time near cursor - pill style */}
         {hoveredIdx !== null && point && (
           <div 
-            className="absolute px-2.5 py-1 rounded-md bg-sky-500 text-[10px] md:text-xs font-bold text-white pointer-events-none z-20 whitespace-nowrap shadow-lg"
+            className="absolute px-2 py-0.5 rounded bg-[#5ec8e8] text-[10px] md:text-[11px] font-bold text-[#1a1a1f] pointer-events-none z-20 whitespace-nowrap"
             style={{ 
-              left: `${Math.min(Math.max(activeX, 30), W - 30)}px`,
-              top: '50%',
-              transform: 'translate(-50%, -50%)'
+              left: `${Math.min(Math.max(activeX, 25), W - 25)}px`,
+              top: '48px',
+              transform: 'translateX(-50%)'
             }}
           >
             {hourOnly(point.time)}
@@ -282,20 +282,12 @@ export function WaveChart({ data }: WaveChartProps) {
           {/* Gradient definition for wave */}
           <defs>
             <linearGradient id="waveGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(56,189,248,0.25)" />
-              <stop offset="40%" stopColor="rgba(56,189,248,0.12)" />
-              <stop offset="100%" stopColor="rgba(56,189,248,0.02)" />
+              <stop offset="0%" stopColor="rgba(94,200,232,0.35)" />
+              <stop offset="50%" stopColor="rgba(94,200,232,0.12)" />
+              <stop offset="100%" stopColor="rgba(94,200,232,0.01)" />
             </linearGradient>
-            <linearGradient id="waveLineGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="50%" stopColor="#67d4fc" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </linearGradient>
-            <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="rgba(56,189,248,0.4)" />
-            </filter>
             <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="rgba(56,189,248,0.7)" />
+              <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="rgba(94,200,232,0.5)" />
             </filter>
           </defs>
 
@@ -318,33 +310,18 @@ export function WaveChart({ data }: WaveChartProps) {
             <path d={waveAreaPath2} fill="url(#waveGradient)" />
 
             {/* Wave top line - bright cyan with glow */}
-            <path d={waveLinePath} fill="none" stroke="#5ec8e8" strokeWidth={2} filter="url(#lineGlow)" />
-
-            {/* Period line - red */}
-            <path d={periodLinePath} fill="none" stroke="#dc2626" strokeWidth={1.5} opacity={0.6} />
+            <path d={waveLinePath} fill="none" stroke="#5ec8e8" strokeWidth={2.5} filter="url(#lineGlow)" />
 
           {/* Interactive hover line */}
             {hoveredIdx !== null && (
-              <>
-                <line
-                  x1={activeX}
-                  y1={0}
-                  x2={activeX}
-                  y2={H}
-                  stroke="#5ec8e8"
-                  strokeWidth={1.5}
-                  opacity={0.9}
-                />
-                {/* Wave dot on the line */}
-                <circle
-                  cx={activeX}
-                  cy={interpY(wavePoints2, activeX)}
-                  r={4}
-                  fill="#5ec8e8"
-                  stroke="#fff"
-                  strokeWidth={2}
-                />
-              </>
+              <line
+                x1={activeX}
+                y1={0}
+                x2={activeX}
+                y2={H}
+                stroke="#5ec8e8"
+                strokeWidth={1.5}
+              />
             )}
           </g>
         </svg>
@@ -368,9 +345,9 @@ export function WaveChart({ data }: WaveChartProps) {
         <MetricItem
           label="PERIODO"
           value={`${formatNum(point?.wavePeriod, 1)} s`}
-          color="text-red-400"
+          color="text-sky-400"
           icon={
-            <svg width="12" height="12" viewBox="0 0 24 24" className="text-red-400 md:w-4 md:h-4">
+            <svg width="12" height="12" viewBox="0 0 24 24" className="text-sky-400 md:w-4 md:h-4">
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
               <path d="M12 7v5l3 3" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
