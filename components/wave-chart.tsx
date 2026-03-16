@@ -282,12 +282,17 @@ export function WaveChart({ data }: WaveChartProps) {
           {/* Gradient definition for wave */}
           <defs>
             <linearGradient id="waveGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(94,200,232,0.35)" />
-              <stop offset="50%" stopColor="rgba(94,200,232,0.12)" />
-              <stop offset="100%" stopColor="rgba(94,200,232,0.01)" />
+              <stop offset="0%" stopColor="rgba(94,200,232,0.30)" />
+              <stop offset="60%" stopColor="rgba(94,200,232,0.08)" />
+              <stop offset="100%" stopColor="rgba(26,26,31,0.95)" />
             </linearGradient>
-            <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="rgba(94,200,232,0.5)" />
+            <filter id="lineGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
             </filter>
           </defs>
 
@@ -310,7 +315,8 @@ export function WaveChart({ data }: WaveChartProps) {
             <path d={waveAreaPath2} fill="url(#waveGradient)" />
 
             {/* Wave top line - bright cyan with glow */}
-            <path d={waveLinePath} fill="none" stroke="#5ec8e8" strokeWidth={2.5} filter="url(#lineGlow)" />
+            <path d={waveLinePath} fill="none" stroke="#6dd5ed" strokeWidth={2} filter="url(#lineGlow)" />
+            <path d={waveLinePath} fill="none" stroke="#ffffff" strokeWidth={0.5} opacity={0.4} />
 
           {/* Interactive hover line */}
             {hoveredIdx !== null && (
