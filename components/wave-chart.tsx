@@ -258,13 +258,14 @@ export function WaveChart({ data }: WaveChartProps) {
 
       {/* SVG chart */}
       <div ref={containerRef} className="relative px-2 pb-1 pt-3 touch-none">
-        {/* Tooltip showing time near cursor */}
+        {/* Tooltip showing time near cursor - pill style */}
         {hoveredIdx !== null && point && (
           <div 
-            className="absolute top-1 px-2 py-0.5 rounded bg-card/90 border border-border/50 text-[10px] md:text-xs text-muted-foreground pointer-events-none z-10 whitespace-nowrap"
+            className="absolute px-2.5 py-1 rounded-md bg-sky-500/90 border border-sky-400/50 text-[10px] md:text-xs font-bold text-white pointer-events-none z-10 whitespace-nowrap shadow-lg"
             style={{ 
               left: `${Math.min(Math.max(activeX + 8, 40), W - 60)}px`,
-              transform: 'translateX(-50%)'
+              top: '50%',
+              transform: 'translate(-50%, -50%)'
             }}
           >
             {hourOnly(point.time)}
@@ -284,24 +285,32 @@ export function WaveChart({ data }: WaveChartProps) {
         >
           {/* Gradient definition for wave */}
           <defs>
-            <linearGradient id="waveGradient" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stopColor="rgba(56,189,248,0.35)" />
-              <stop offset="50%" stopColor="rgba(56,189,248,0.15)" />
-              <stop offset="100%" stopColor="rgba(56,189,248,0.03)" />
+            <linearGradient id="waveGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(56,189,248,0.25)" />
+              <stop offset="40%" stopColor="rgba(56,189,248,0.12)" />
+              <stop offset="100%" stopColor="rgba(56,189,248,0.02)" />
+            </linearGradient>
+            <linearGradient id="waveLineGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="50%" stopColor="#67d4fc" />
+              <stop offset="100%" stopColor="#38bdf8" />
             </linearGradient>
             <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="rgba(56,189,248,0.6)" />
+              <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="rgba(56,189,248,0.4)" />
+            </filter>
+            <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="rgba(56,189,248,0.7)" />
             </filter>
           </defs>
 
           {/* Wind area - gray */}
           <path d={windAreaPath} fill="#9ca3af" opacity={0.35} />
 
-          {/* Wave layer - gradient blue with glow */}
-          <path d={waveAreaPath2} fill="url(#waveGradient)" filter="url(#waveGlow)" />
+          {/* Wave layer - gradient blue */}
+          <path d={waveAreaPath2} fill="url(#waveGradient)" />
 
-          {/* Wave top line - blue highlight */}
-          <path d={waveLinePath} fill="none" stroke="#38bdf8" strokeWidth={2} opacity={0.9} />
+          {/* Wave top line - cyan highlight with glow */}
+          <path d={waveLinePath} fill="none" stroke="url(#waveLineGradient)" strokeWidth={2.5} filter="url(#lineGlow)" />
 
           {/* Period line - red */}
           <path d={periodLinePath} fill="none" stroke="#dc2626" strokeWidth={2} opacity={0.75} />
@@ -329,9 +338,9 @@ export function WaveChart({ data }: WaveChartProps) {
                 y1={0}
                 x2={activeX}
                 y2={H}
-                stroke="#dc2626"
+                stroke="#38bdf8"
                 strokeWidth={1.5}
-                opacity={0.7}
+                opacity={0.8}
               />
               {/* Wave dot */}
               <circle
