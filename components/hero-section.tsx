@@ -30,33 +30,13 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Dark Overlay Gradient */}
+      {/* Combined Overlay - lateral dark + vertical fade */}
       <div 
         className="absolute inset-0"
         style={{
           background: `
-            linear-gradient(
-              to bottom,
-              rgba(10, 10, 12, 0.4) 0%,
-              rgba(10, 10, 12, 0.5) 40%,
-              rgba(10, 10, 12, 0.7) 70%,
-              rgba(18, 18, 20, 0.95) 100%
-            )
-          `
-        }}
-      />
-
-      {/* Side gradient for text readability */}
-      <div 
-        className="absolute inset-0 hidden md:block"
-        style={{
-          background: `
-            linear-gradient(
-              to right,
-              rgba(10, 10, 12, 0.6) 0%,
-              rgba(10, 10, 12, 0.3) 40%,
-              transparent 70%
-            )
+            linear-gradient(90deg, rgba(6,10,18,0.72) 0%, rgba(6,10,18,0.46) 34%, rgba(6,10,18,0.18) 70%, rgba(6,10,18,0.28) 100%),
+            linear-gradient(180deg, rgba(6,10,18,0.18) 0%, rgba(6,10,18,0.58) 100%)
           `
         }}
       />
