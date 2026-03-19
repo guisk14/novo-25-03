@@ -108,20 +108,9 @@ export function Topbar() {
         </h1>
       </div>
 
-      <button
-        className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 lg:hidden ml-auto transition-colors hover:bg-white/10"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Menu"
-      >
-        {menuOpen ? (
-          <X className="h-5 w-5 text-foreground" />
-        ) : (
-          <Menu className="h-5 w-5 text-foreground" />
-        )}
-      </button>
-
-      {/* Notification Bell */}
-      <div ref={notifRef} className="relative ml-auto lg:ml-0">
+      <div className="flex items-center gap-2 ml-auto lg:ml-0">
+        {/* Notification Bell */}
+        <div ref={notifRef} className="relative">
         <button
           onClick={() => setNotifOpen((v) => !v)}
           aria-label="Notificações"
@@ -193,6 +182,19 @@ export function Topbar() {
             </div>
           </div>
         )}
+        </div>
+
+        <button
+          className="flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 lg:hidden transition-colors hover:bg-white/10"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menu"
+        >
+          {menuOpen ? (
+            <X className="h-5 w-5 text-foreground" />
+          ) : (
+            <Menu className="h-5 w-5 text-foreground" />
+          )}
+        </button>
       </div>
 
       <nav
