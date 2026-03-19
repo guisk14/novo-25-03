@@ -61,7 +61,7 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background" style={{ background: "radial-gradient(circle at top center, #1f1f22, #121214)" }}>
+    <div className="min-h-screen bg-background">
       <Topbar />
 
       <HeroSection />

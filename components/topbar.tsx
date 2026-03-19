@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 type Notification = {
   id: number
@@ -161,8 +162,12 @@ export function Topbar() {
         </ul>
       </nav>
 
-      {/* Notification Bell - Right side */}
-      <div ref={notifRef} className="relative ml-auto">
+      {/* Right side: Theme toggle + Notifications */}
+      <div className="flex items-center gap-2 ml-auto">
+        <ThemeToggle />
+
+        {/* Notification Bell */}
+        <div ref={notifRef} className="relative">
         <button
           onClick={() => setNotifOpen((v) => !v)}
           aria-label="Notificações"
@@ -234,6 +239,7 @@ export function Topbar() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </header>
   )

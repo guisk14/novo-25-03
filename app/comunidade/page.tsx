@@ -19,16 +19,14 @@ const topSpots = [
 
 export default async function ComunidadePage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
 
-  // Get community stats
-  const { count: postsCount } = await supabase
-    .from("community_posts")
-    .select("*", { count: "exact", head: true })
-
-  const { count: usersCount } = await supabase
-    .from("profiles")
-    .select("*", { count: "exact", head: true })
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null
+  const postsCount = supabase
+    ? (await supabase.from("community_posts").select("*", { count: "exact", head: true })).count
+    : 0
+  const usersCount = supabase
+    ? (await supabase.from("profiles").select("*", { count: "exact", head: true })).count
+    : 0
 
   return (
     <div className="min-h-screen bg-background text-foreground">
