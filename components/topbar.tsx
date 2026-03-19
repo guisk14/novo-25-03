@@ -91,10 +91,11 @@ export function Topbar() {
 
   return (
     <header 
-      className={`sticky top-0 z-50 flex items-center justify-between backdrop-blur-xl px-6 border-b-2 lg:px-8 lg:justify-start lg:gap-8 transition-all duration-300 
-        bg-[rgba(10,10,15,0.9)] border-[rgba(255,255,255,0.15)]
-        [.light_&]:bg-white [.light_&]:border-slate-300 [.light_&]:shadow-md
-        ${scrolled ? "py-2.5" : "py-3"
+      className={`sticky top-0 z-50 flex items-center justify-between backdrop-blur-xl px-6 border-b lg:px-8 lg:justify-start lg:gap-8 transition-all duration-300 
+        bg-[rgba(10,15,25,0.75)] border-[rgba(255,255,255,0.06)]
+        dark:bg-[rgba(10,15,25,0.75)] dark:border-[rgba(255,255,255,0.06)]
+        [.light_&]:bg-white/90 [.light_&]:border-slate-200/60 [.light_&]:shadow-sm
+        ${scrolled ? "py-3" : "py-4"
       }`}
     >
       <div className="flex items-center gap-3">
@@ -141,18 +142,18 @@ export function Topbar() {
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`relative block px-6 py-3 text-center lg:py-2 lg:px-4 text-sm font-bold uppercase tracking-wide transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg ${
+                  className={`relative block px-6 py-4 text-center lg:py-2 lg:px-3 text-sm font-semibold uppercase transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg ${
                     isActive
-                      ? "text-primary font-black lg:bg-primary/15"
-                      : "text-muted-foreground hover:text-foreground hover:bg-white/8 [.light_&]:hover:bg-slate-100"
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >
                   {link.label}
                   {/* Active indicator - underline */}
                   <span
-                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] bg-primary rounded-full transition-all duration-300 ${
-                      isActive ? "w-8 opacity-100" : "w-0 opacity-0"
+                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full transition-all duration-300 ${
+                      isActive ? "w-6 opacity-100" : "w-0 opacity-0"
                     }`}
                   />
                   {/* Mobile active background */}
@@ -175,13 +176,13 @@ export function Topbar() {
         <button
           onClick={() => setNotifOpen((v) => !v)}
           aria-label="Notificações"
-          className="relative flex items-center justify-center w-11 h-11 rounded-lg transition-all
-            bg-white/10 hover:bg-white/15 border border-white/10
-            [.light_&]:bg-slate-100 [.light_&]:hover:bg-slate-150 [.light_&]:border-slate-300"
+          className="relative flex items-center justify-center w-[42px] h-[42px] rounded-xl transition-colors
+            bg-white/5 hover:bg-white/10
+            [.light_&]:bg-slate-100 [.light_&]:hover:bg-slate-200"
         >
           <Bell className="h-5 w-5 text-foreground" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-black text-black leading-none">
+            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-black leading-none">
               {unreadCount}
             </span>
           )}
@@ -189,9 +190,9 @@ export function Topbar() {
 
         {/* Dropdown */}
         {notifOpen && (
-          <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-xl border-2 shadow-2xl backdrop-blur-xl overflow-hidden
-            border-white/15 bg-[rgba(15,15,25,0.98)]
-            [.light_&]:border-slate-300 [.light_&]:bg-white [.light_&]:shadow-lg">
+          <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border shadow-2xl backdrop-blur-xl overflow-hidden
+            border-white/10 bg-[rgba(18,18,20,0.95)]
+            [.light_&]:border-slate-200 [.light_&]:bg-white [.light_&]:shadow-lg">
             {/* Header */}
             <div className="flex items-center justify-between border-b px-4 py-3 border-white/8 [.light_&]:border-slate-100">
               <span className="text-sm font-semibold text-foreground">Notificações</span>
