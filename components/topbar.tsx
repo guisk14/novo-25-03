@@ -1,9 +1,45 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Waves, Menu, X } from "lucide-react"
+import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle } from "lucide-react"
+
+type Notification = {
+  id: number
+  icon: React.ReactNode
+  title: string
+  desc: string
+  time: string
+  read: boolean
+}
+
+const INITIAL_NOTIFICATIONS: Notification[] = [
+  {
+    id: 1,
+    icon: <Wind className="h-4 w-4 text-primary" />,
+    title: "Vento favoravel detectado",
+    desc: "Condições ideais em Maresias nas próximas 3h.",
+    time: "Agora",
+    read: false,
+  },
+  {
+    id: 2,
+    icon: <Droplets className="h-4 w-4 text-cyan-400" />,
+    title: "Ondas acima de 1.5m",
+    desc: "Previsão de ondulação forte em Ubatuba amanhã.",
+    time: "5 min",
+    read: false,
+  },
+  {
+    id: 3,
+    icon: <AlertTriangle className="h-4 w-4 text-amber-400" />,
+    title: "Alerta de ressaca",
+    desc: "IBAMA emitiu alerta para o litoral norte.",
+    time: "1h",
+    read: true,
+  },
+]
 
 const navLinks = [
   { label: "Inicio", href: "/" },
@@ -15,7 +51,27 @@ const navLinks = [
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS)
+  const notifRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  const unreadCount = notifications.filter((n) => !n.read).length
+
+  const markAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+  }
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   // Check if link is active
   const isLinkActive = (href: string) => {
@@ -63,6 +119,81 @@ export function Topbar() {
           <Menu className="h-5 w-5 text-foreground" />
         )}
       </button>
+
+      {/* Notification Bell */}
+      <div ref={notifRef} className="relative ml-auto lg:ml-0">
+        <button
+          onClick={() => setNotifOpen((v) => !v)}
+          aria-label="Notificações"
+          className="relative flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+        >
+          <Bell className="h-5 w-5 text-foreground" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-black leading-none">
+              {unreadCount}
+            </span>
+          )}
+        </button>
+
+        {/* Dropdown */}
+        {notifOpen && (
+          <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.95)] shadow-2xl backdrop-blur-xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
+              <span className="text-sm font-semibold text-foreground">Notificações</span>
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllRead}
+                  className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Marcar todas como lidas
+                </button>
+              )}
+            </div>
+
+            {/* List */}
+            <ul className="divide-y divide-white/6 max-h-72 overflow-y-auto">
+              {notifications.map((notif) => (
+                <li
+                  key={notif.id}
+                  className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 cursor-pointer ${
+                    !notif.read ? "bg-primary/5" : ""
+                  }`}
+                  onClick={() =>
+                    setNotifications((prev) =>
+                      prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
+                    )
+                  }
+                >
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/8">
+                    {notif.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold leading-snug ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>
+                      {notif.title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground leading-snug line-clamp-2">{notif.desc}</p>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end gap-1.5">
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{notif.time}</span>
+                    {!notif.read && (
+                      <span className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Footer */}
+            <div className="border-t border-white/8 px-4 py-3 text-center">
+              <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
+                Ver todas as notificações
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       <nav
         className={`${
