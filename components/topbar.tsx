@@ -47,7 +47,7 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
 
 const navLinks = [
   { label: "Inicio", href: "/" },
-  { label: "Previsao", href: "/#forecast-content" },
+  { label: "Previsao", href: "/previsao" },
   { label: "Comunidade", href: "/comunidade" },
   { label: "Contato", href: "/contato" },
 ]
