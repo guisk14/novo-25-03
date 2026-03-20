@@ -1,11 +1,13 @@
 "use client"
 
-// Version 1.0 - User profile dropdown with preferences
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle, User, Settings, LogOut, ChevronDown, Sun, Moon, Calendar } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { useTheme } from "next-themes"
+import {
+  Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle,
+  User, Settings, LogOut, ChevronDown, Sun, Moon, Monitor,
+} from "lucide-react"
 
 type Notification = {
   id: number
@@ -50,7 +52,6 @@ const navLinks = [
   { label: "Contato", href: "/contato" },
 ]
 
-// Mock user — substitua por dados reais de autenticação
 const MOCK_USER = {
   name: "João Surfista",
   email: "joao@temonda.com",
@@ -62,27 +63,21 @@ export function Topbar() {
   const [scrolled, setScrolled] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [userOpen, setUserOpen] = useState(false)
-  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto")
   const [language, setLanguage] = useState("pt-BR")
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS)
   const notifRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
-  }
+  const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
-        setNotifOpen(false)
-      }
-      if (userRef.current && !userRef.current.contains(e.target as Node)) {
-        setUserOpen(false)
-      }
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false)
+      if (userRef.current && !userRef.current.contains(e.target as Node)) setUserOpen(false)
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
@@ -108,18 +103,10 @@ export function Topbar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <div
-          className={`flex items-center justify-center rounded-full border-2 border-primary bg-primary/10 shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all duration-300 ${
-            scrolled ? "h-9 w-9" : "h-10 w-10"
-          }`}
-        >
+        <div className={`flex items-center justify-center rounded-full border-2 border-primary bg-primary/10 shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all duration-300 ${scrolled ? "h-9 w-9" : "h-10 w-10"}`}>
           <Waves className={`text-primary transition-all duration-300 ${scrolled ? "h-4 w-4" : "h-5 w-5"}`} />
         </div>
-        <h1
-          className={`font-extrabold uppercase tracking-tight transition-all duration-300 ${
-            scrolled ? "text-base" : "text-lg"
-          }`}
-        >
+        <h1 className={`font-extrabold uppercase tracking-tight transition-all duration-300 ${scrolled ? "text-base" : "text-lg"}`}>
           <span className="text-foreground">TEM</span>{" "}
           <span className="text-primary">ONDA</span>
         </h1>
@@ -131,11 +118,7 @@ export function Topbar() {
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label="Menu"
       >
-        {menuOpen ? (
-          <X className="h-5 w-5 text-foreground" />
-        ) : (
-          <Menu className="h-5 w-5 text-foreground" />
-        )}
+        {menuOpen ? <X className="h-5 w-5 text-foreground" /> : <Menu className="h-5 w-5 text-foreground" />}
       </button>
 
       {/* Nav */}
@@ -160,14 +143,8 @@ export function Topbar() {
                   aria-current={isActive ? "page" : undefined}
                 >
                   {link.label}
-                  <span
-                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full transition-all duration-300 ${
-                      isActive ? "w-6 opacity-100" : "w-0 opacity-0"
-                    }`}
-                  />
-                  {isActive && (
-                    <span className="absolute inset-0 bg-primary/10 rounded-lg lg:hidden -z-10" />
-                  )}
+                  <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full transition-all duration-300 ${isActive ? "w-6 opacity-100" : "w-0 opacity-0"}`} />
+                  {isActive && <span className="absolute inset-0 bg-primary/10 rounded-lg lg:hidden -z-10" />}
                 </Link>
               </li>
             )
@@ -175,9 +152,8 @@ export function Topbar() {
         </ul>
       </nav>
 
-      {/* Right side: Theme toggle + Notifications + User */}
+      {/* Right side: Notifications + User */}
       <div className="flex items-center gap-2 ml-auto">
-        <ThemeToggle />
 
         {/* Notification Bell */}
         <div ref={notifRef} className="relative">
@@ -199,10 +175,7 @@ export function Topbar() {
               <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
                 <span className="text-sm font-semibold text-foreground">Notificações</span>
                 {unreadCount > 0 && (
-                  <button
-                    onClick={markAllRead}
-                    className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                  >
+                  <button onClick={markAllRead} className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors">
                     <CheckCheck className="h-3.5 w-3.5" />
                     Marcar todas como lidas
                   </button>
@@ -212,22 +185,14 @@ export function Topbar() {
                 {notifications.map((notif) => (
                   <li
                     key={notif.id}
-                    className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 cursor-pointer ${
-                      !notif.read ? "bg-primary/5" : ""
-                    }`}
-                    onClick={() =>
-                      setNotifications((prev) =>
-                        prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
-                      )
-                    }
+                    className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 cursor-pointer ${!notif.read ? "bg-primary/5" : ""}`}
+                    onClick={() => setNotifications((prev) => prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n)))}
                   >
                     <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/8">
                       {notif.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold leading-snug ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>
-                        {notif.title}
-                      </p>
+                      <p className={`text-sm font-semibold leading-snug ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>{notif.title}</p>
                       <p className="mt-0.5 text-xs text-muted-foreground leading-snug line-clamp-2">{notif.desc}</p>
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1.5">
@@ -256,13 +221,12 @@ export function Topbar() {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-cyan-400 text-[11px] font-black text-black select-none">
               {MOCK_USER.initials}
             </div>
-            <ChevronDown
-              className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${userOpen ? "rotate-180" : ""}`}
-            />
+            <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${userOpen ? "rotate-180" : ""}`} />
           </button>
 
           {userOpen && (
-            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-56 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.97)] shadow-2xl backdrop-blur-xl overflow-hidden">
+            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-60 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.97)] shadow-2xl backdrop-blur-xl overflow-hidden">
+              {/* User info */}
               <div className="flex items-center gap-3 px-4 py-4 border-b border-white/8">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-cyan-400 text-sm font-black text-black select-none">
                   {MOCK_USER.initials}
@@ -272,6 +236,8 @@ export function Topbar() {
                   <p className="text-xs text-muted-foreground truncate">{MOCK_USER.email}</p>
                 </div>
               </div>
+
+              {/* Nav items */}
               <ul className="py-1.5">
                 <li>
                   <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors">
@@ -287,57 +253,45 @@ export function Topbar() {
                 </li>
               </ul>
 
-              {/* Preferences Section */}
+              {/* Preferences */}
               <div className="border-t border-white/8 px-4 py-4 space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Preferências</h3>
 
-                {/* Theme */}
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold text-muted-foreground">Tema</p>
-                  <div className="flex items-center gap-2">
+                {/* Theme selector */}
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-foreground">Tema</p>
+                  <div className="flex items-center gap-0.5 p-1 rounded-lg bg-white/5 border border-white/8">
                     <button
-                      onClick={() => setTheme("auto")}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                        theme === "auto"
-                          ? "bg-primary/30 text-primary"
-                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
-                      }`}
+                      onClick={() => setTheme("system")}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${theme === "system" ? "bg-primary/30 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
                       title="Automático"
                     >
-                      <Calendar className="h-4 w-4" />
+                      <Monitor className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => setTheme("light")}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                        theme === "light"
-                          ? "bg-primary/30 text-primary"
-                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
-                      }`}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${theme === "light" ? "bg-primary/30 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
                       title="Claro"
                     >
-                      <Sun className="h-4 w-4" />
+                      <Sun className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => setTheme("dark")}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                        theme === "dark"
-                          ? "bg-primary/30 text-primary"
-                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
-                      }`}
+                      className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${theme === "dark" ? "bg-primary/30 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/10"}`}
                       title="Escuro"
                     >
-                      <Moon className="h-4 w-4" />
+                      <Moon className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
 
                 {/* Language */}
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold text-muted-foreground">Idioma</p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-medium text-foreground shrink-0">Idioma</p>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-foreground hover:bg-white/8 transition-colors cursor-pointer"
+                    className="flex-1 rounded-lg bg-white/5 border border-white/10 px-2.5 py-1.5 text-xs text-foreground transition-colors cursor-pointer"
                   >
                     <option value="pt-BR">Português</option>
                     <option value="en-US">English</option>
@@ -346,6 +300,7 @@ export function Topbar() {
                 </div>
               </div>
 
+              {/* Logout */}
               <div className="border-t border-white/8 py-1.5">
                 <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
                   <LogOut className="h-4 w-4" />
