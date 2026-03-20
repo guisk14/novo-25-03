@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle, User, Settings, LogOut, ChevronDown } from "lucide-react"
+import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 type Notification = {
@@ -49,22 +49,12 @@ const navLinks = [
   { label: "Contato", href: "/contato" },
 ]
 
-// Mock user — troque por dados reais de autenticação quando disponível
-const MOCK_USER = {
-  name: "João Surfista",
-  email: "joao@temonda.com",
-  initials: "JS",
-  avatarColor: "from-primary to-cyan-400",
-}
-
 export function Topbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
-  const [userOpen, setUserOpen] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS)
   const notifRef = useRef<HTMLDivElement>(null)
-  const userRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
   const unreadCount = notifications.filter((n) => !n.read).length
@@ -73,20 +63,18 @@ export function Topbar() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
   }
 
-  // Close dropdowns on outside click
+  // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotifOpen(false)
-      }
-      if (userRef.current && !userRef.current.contains(e.target as Node)) {
-        setUserOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  // Check if link is active
   const isLinkActive = (href: string) => {
     if (href === "/") return pathname === "/"
     if (href.startsWith("/#")) return pathname === "/"
@@ -116,7 +104,7 @@ export function Topbar() {
         <h1 className={`font-extrabold uppercase tracking-tight transition-all duration-300 ${
           scrolled ? "text-base" : "text-lg"
         }`}>
-          <span className="text-foreground">TEM</span>{" "}
+          <span className="text-white">TEM</span>{" "}
           <span className="text-primary">ONDA</span>
         </h1>
       </div>
@@ -157,11 +145,13 @@ export function Topbar() {
                   aria-current={isActive ? "page" : undefined}
                 >
                   {link.label}
+                  {/* Active indicator - underline */}
                   <span
                     className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-primary rounded-full transition-all duration-300 ${
                       isActive ? "w-6 opacity-100" : "w-0 opacity-0"
                     }`}
                   />
+                  {/* Mobile active background */}
                   {isActive && (
                     <span className="absolute inset-0 bg-primary/10 rounded-lg lg:hidden -z-10" />
                   )}
@@ -172,133 +162,83 @@ export function Topbar() {
         </ul>
       </nav>
 
-      {/* Right side: Theme toggle + Notifications + User */}
+      {/* Right side: Theme toggle + Notifications */}
       <div className="flex items-center gap-2 ml-auto">
         <ThemeToggle />
 
         {/* Notification Bell */}
         <div ref={notifRef} className="relative">
-          <button
-            onClick={() => { setNotifOpen((v) => !v); setUserOpen(false) }}
-            aria-label="Notificações"
-            className="relative flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
-          >
-            <Bell className="h-5 w-5 text-foreground" />
-            {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-black leading-none">
-                {unreadCount}
-              </span>
-            )}
-          </button>
-
-          {/* Notifications Dropdown */}
-          {notifOpen && (
-            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.95)] shadow-2xl backdrop-blur-xl overflow-hidden">
-              <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
-                <span className="text-sm font-semibold text-foreground">Notificações</span>
-                {unreadCount > 0 && (
-                  <button
-                    onClick={markAllRead}
-                    className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <CheckCheck className="h-3.5 w-3.5" />
-                    Marcar todas como lidas
-                  </button>
-                )}
-              </div>
-              <ul className="divide-y divide-white/6 max-h-72 overflow-y-auto">
-                {notifications.map((notif) => (
-                  <li
-                    key={notif.id}
-                    className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 cursor-pointer ${
-                      !notif.read ? "bg-primary/5" : ""
-                    }`}
-                    onClick={() =>
-                      setNotifications((prev) =>
-                        prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
-                      )
-                    }
-                  >
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/8">
-                      {notif.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold leading-snug ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>
-                        {notif.title}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground leading-snug line-clamp-2">{notif.desc}</p>
-                    </div>
-                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                      <span className="text-[10px] text-muted-foreground whitespace-nowrap">{notif.time}</span>
-                      {!notif.read && <span className="h-2 w-2 rounded-full bg-primary" />}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="border-t border-white/8 px-4 py-3 text-center">
-                <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
-                  Ver todas as notificações
-                </button>
-              </div>
-            </div>
+        <button
+          onClick={() => setNotifOpen((v) => !v)}
+          aria-label="Notificações"
+          className="relative flex items-center justify-center w-[42px] h-[42px] rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+        >
+          <Bell className="h-5 w-5 text-foreground" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-black leading-none">
+              {unreadCount}
+            </span>
           )}
-        </div>
+        </button>
 
-        {/* User Avatar Button */}
-        <div ref={userRef} className="relative">
-          <button
-            onClick={() => { setUserOpen((v) => !v); setNotifOpen(false) }}
-            aria-label="Perfil do usuário"
-            className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
-          >
-            {/* Avatar */}
-            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${MOCK_USER.avatarColor} text-xs font-black text-black select-none`}>
-              {MOCK_USER.initials}
-            </div>
-            <ChevronDown
-              className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${userOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {/* User Dropdown */}
-          {userOpen && (
-            <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-56 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.97)] shadow-2xl backdrop-blur-xl overflow-hidden">
-              {/* User info */}
-              <div className="flex items-center gap-3 px-4 py-4 border-b border-white/8">
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${MOCK_USER.avatarColor} text-sm font-black text-black select-none`}>
-                  {MOCK_USER.initials}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground truncate">{MOCK_USER.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{MOCK_USER.email}</p>
-                </div>
-              </div>
-
-              {/* Menu items */}
-              <ul className="py-1.5">
-                <li>
-                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    Perfil
-                  </button>
-                </li>
-                <li>
-                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors">
-                    <Settings className="h-4 w-4 text-muted-foreground" />
-                    Configurações
-                  </button>
-                </li>
-              </ul>
-
-              {/* Logout */}
-              <div className="border-t border-white/8 py-1.5">
-                <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
-                  <LogOut className="h-4 w-4" />
-                  Sair
+        {/* Dropdown */}
+        {notifOpen && (
+          <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-[rgba(18,18,20,0.95)] shadow-2xl backdrop-blur-xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
+              <span className="text-sm font-semibold text-foreground">Notificações</span>
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllRead}
+                  className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Marcar todas como lidas
                 </button>
-              </div>
+              )}
             </div>
-          )}
+
+            {/* List */}
+            <ul className="divide-y divide-white/6 max-h-72 overflow-y-auto">
+              {notifications.map((notif) => (
+                <li
+                  key={notif.id}
+                  className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 cursor-pointer ${
+                    !notif.read ? "bg-primary/5" : ""
+                  }`}
+                  onClick={() =>
+                    setNotifications((prev) =>
+                      prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
+                    )
+                  }
+                >
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/8">
+                    {notif.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold leading-snug ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>
+                      {notif.title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground leading-snug line-clamp-2">{notif.desc}</p>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end gap-1.5">
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{notif.time}</span>
+                    {!notif.read && (
+                      <span className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Footer */}
+            <div className="border-t border-white/8 px-4 py-3 text-center">
+              <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
+                Ver todas as notificações
+              </button>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </header>
