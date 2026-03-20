@@ -1,9 +1,10 @@
 "use client"
 
+// Version 1.0 - User profile dropdown with preferences
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle, User, Settings, LogOut, ChevronDown } from "lucide-react"
+import { Waves, Menu, X, Bell, CheckCheck, Wind, Droplets, AlertTriangle, User, Settings, LogOut, ChevronDown, Sun, Moon, Calendar } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 type Notification = {
@@ -61,6 +62,8 @@ export function Topbar() {
   const [scrolled, setScrolled] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [userOpen, setUserOpen] = useState(false)
+  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto")
+  const [language, setLanguage] = useState("pt-BR")
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS)
   const notifRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLDivElement>(null)
@@ -283,6 +286,66 @@ export function Topbar() {
                   </button>
                 </li>
               </ul>
+
+              {/* Preferences Section */}
+              <div className="border-t border-white/8 px-4 py-4 space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Preferências</h3>
+
+                {/* Theme */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground">Tema</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setTheme("auto")}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        theme === "auto"
+                          ? "bg-primary/30 text-primary"
+                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
+                      }`}
+                      title="Automático"
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => setTheme("light")}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        theme === "light"
+                          ? "bg-primary/30 text-primary"
+                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
+                      }`}
+                      title="Claro"
+                    >
+                      <Sun className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => setTheme("dark")}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        theme === "dark"
+                          ? "bg-primary/30 text-primary"
+                          : "bg-white/5 text-muted-foreground hover:bg-white/10"
+                      }`}
+                      title="Escuro"
+                    >
+                      <Moon className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Language */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground">Idioma</p>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-foreground hover:bg-white/8 transition-colors cursor-pointer"
+                  >
+                    <option value="pt-BR">Português</option>
+                    <option value="en-US">English</option>
+                    <option value="es-ES">Español</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="border-t border-white/8 py-1.5">
                 <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
                   <LogOut className="h-4 w-4" />
