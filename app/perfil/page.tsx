@@ -17,7 +17,7 @@ export default function ProfilePage() {
       <Topbar />
       
       {/* Hero background with gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-[rgba(163,230,53,0.08)] to-background pt-8 pb-20">
+      <div className="relative bg-gradient-to-b from-[rgba(163,230,53,0.08)] to-background pt-8 pb-20">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-[rgba(163,230,53,0.1)] blur-3xl opacity-50" />
