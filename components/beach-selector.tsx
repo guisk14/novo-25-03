@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { BEACH_DATA } from "@/lib/beach-data"
-import type { Beach } from "@/lib/beach-data"
-import { Search, MapPin } from "lucide-react"
+import { Search, MapPin, ChevronDown } from "lucide-react"
 
 interface BeachSelectorProps {
   selectedCityId: string
@@ -12,7 +11,6 @@ interface BeachSelectorProps {
   onBeachChange: (beachId: string) => void
 }
 
-// Flatten all beaches with city info for search
 const allBeaches = BEACH_DATA.flatMap((city) =>
   city.beaches.map((beach) => ({
     ...beach,
@@ -34,12 +32,11 @@ export function BeachSelector({
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
 
-  // Get current selected beach for display
+  const selectedCity = BEACH_DATA.find(c => c.cityId === selectedCityId)
   const selectedBeach = allBeaches.find(
     (b) => b.id === selectedBeachId && b.cityId === selectedCityId
   )
 
-  // Filter beaches based on search query
   const filteredBeaches = searchQuery.trim()
     ? allBeaches.filter(
         (beach) =>
@@ -48,7 +45,6 @@ export function BeachSelector({
       )
     : allBeaches
 
-  // Handle beach selection
   const handleSelect = (beach: typeof allBeaches[0]) => {
     onCityChange(beach.cityId)
     onBeachChange(beach.id)
@@ -57,7 +53,6 @@ export function BeachSelector({
     inputRef.current?.blur()
   }
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
       if (e.key === "ArrowDown" || e.key === "Enter") {
@@ -92,12 +87,10 @@ export function BeachSelector({
     }
   }
 
-  // Reset highlighted index when filtered results change
   useEffect(() => {
     setHighlightedIndex(0)
   }, [searchQuery])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -115,17 +108,26 @@ export function BeachSelector({
   }, [])
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <MapPin className="h-4 w-4 text-primary" />
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Selecionar Pico
-        </h2>
+    <div className="flex flex-col gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-[#a3e635]" />
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40">
+            Seletor de Pico
+          </h2>
+        </div>
+        {selectedCity && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#a3e635]/10 border border-[#a3e635]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#a3e635]">
+            {selectedCity.cityName}
+          </span>
+        )}
       </div>
       
+      {/* Search Input */}
       <div className="relative">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
           <input
             ref={inputRef}
             type="text"
@@ -137,14 +139,18 @@ export function BeachSelector({
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder={selectedBeach ? selectedBeach.fullName : "Pesquisar praia..."}
-            className="w-full rounded-lg border border-border bg-secondary pl-10 pr-4 py-2.5 text-sm font-medium text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+            className="w-full rounded-xl border border-white/10 bg-[#0d0d15] pl-11 pr-12 py-3.5 text-sm font-medium text-white placeholder:text-white/30 transition-all duration-300 focus:outline-none focus:border-[#a3e635]/50 focus:ring-2 focus:ring-[#a3e635]/20 hover:border-white/20"
+          />
+          <ChevronDown 
+            className={`absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
           />
         </div>
 
+        {/* Dropdown */}
         {isOpen && (
           <ul
             ref={listRef}
-            className="absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-lg border border-border bg-popover shadow-xl"
+            className="absolute z-50 mt-2 w-full max-h-72 overflow-auto rounded-xl border border-white/10 bg-[#0d0d15] shadow-2xl shadow-black/50 backdrop-blur-xl"
           >
             {filteredBeaches.length > 0 ? (
               filteredBeaches.map((beach, index) => (
@@ -152,25 +158,32 @@ export function BeachSelector({
                   key={`${beach.cityId}-${beach.id}`}
                   onClick={() => handleSelect(beach)}
                   onMouseEnter={() => setHighlightedIndex(index)}
-                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all duration-200 ${
                     index === highlightedIndex
-                      ? "bg-primary/10 text-foreground"
-                      : "text-foreground hover:bg-secondary"
+                      ? "bg-[#a3e635]/10 text-white"
+                      : "text-white/70 hover:bg-white/5"
                   } ${
                     beach.id === selectedBeachId && beach.cityId === selectedCityId
-                      ? "border-l-2 border-l-primary"
+                      ? "border-l-2 border-l-[#a3e635]"
                       : ""
                   }`}
                 >
-                  <MapPin className="h-4 w-4 text-primary shrink-0" />
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                    index === highlightedIndex ? 'bg-[#a3e635]/20' : 'bg-white/5'
+                  }`}>
+                    <MapPin className={`h-4 w-4 ${index === highlightedIndex ? 'text-[#a3e635]' : 'text-white/40'}`} />
+                  </div>
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold">{beach.name}</span>
-                    <span className="text-xs text-muted-foreground">{beach.cityName}</span>
+                    <span className="text-xs text-white/40">{beach.cityName}</span>
                   </div>
+                  {beach.id === selectedBeachId && beach.cityId === selectedCityId && (
+                    <span className="ml-auto text-xs font-medium text-[#a3e635]">Selecionado</span>
+                  )}
                 </li>
               ))
             ) : (
-              <li className="px-4 py-3 text-sm text-muted-foreground text-center">
+              <li className="px-4 py-6 text-sm text-white/40 text-center">
                 Nenhuma praia encontrada
               </li>
             )}

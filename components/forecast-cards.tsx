@@ -41,7 +41,7 @@ function WindIcon({ className }: { className?: string }) {
 
 function CompassIcon({ className, rotation }: { className?: string; rotation: number }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${rotation}deg)` }}>
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${rotation}deg)`, transition: 'transform 0.5s ease-out' }}>
       <path d="M12 2v4" />
       <path d="M12 18v4" />
       <path d="M2 12h4" />
@@ -52,27 +52,21 @@ function CompassIcon({ className, rotation }: { className?: string; rotation: nu
   )
 }
 
-function getHeightColor(height: number): { accent: string; bg: string; glow: string } {
-  if (height >= 3) return { accent: "#ef4444", bg: "rgba(239,68,68,0.08)", glow: "rgba(239,68,68,0.15)" }
-  if (height >= 2) return { accent: "#f59e0b", bg: "rgba(245,158,11,0.08)", glow: "rgba(245,158,11,0.15)" }
-  if (height >= 1) return { accent: "#22c55e", bg: "rgba(34,197,94,0.08)", glow: "rgba(34,197,94,0.15)" }
-  if (height >= 0.5) return { accent: "#38bdf8", bg: "rgba(56,189,248,0.08)", glow: "rgba(56,189,248,0.15)" }
-  return { accent: "#94a3b8", bg: "rgba(148,163,184,0.06)", glow: "rgba(148,163,184,0.1)" }
-}
-
 const CARD_THEMES = {
-  altura: { accent: "#38bdf8", label: "Altura" },
-  periodo: { accent: "#60a5fa", label: "Periodo" },
-  direcao: { accent: "transparent", label: "Dir. Onda" },
-  vento: { accent: "#34d399", label: "Vento" },
+  altura: { accent: "#a3e635", label: "Altura", glow: "rgba(163, 230, 53, 0.15)" },
+  periodo: { accent: "#22d3ee", label: "Periodo", glow: "rgba(34, 211, 238, 0.15)" },
+  direcao: { accent: "#f472b6", label: "Dir. Onda", glow: "rgba(244, 114, 182, 0.15)" },
+  vento: { accent: "#fbbf24", label: "Vento", glow: "rgba(251, 191, 36, 0.15)" },
 }
 
 function CardSkeleton() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl bg-card p-6 min-h-[160px] border border-border">
-      <div className="h-8 w-8 rounded-full bg-muted animate-pulse mb-3" />
-      <div className="h-3 w-16 rounded bg-muted animate-pulse mb-3" />
-      <div className="h-10 w-24 rounded bg-muted animate-pulse mb-2" />
+    <div className="relative flex flex-col items-center justify-center rounded-2xl bg-[#0d0d15] border border-white/10 p-6 min-h-[180px] overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+      <div className="h-10 w-10 rounded-xl bg-white/10 animate-pulse mb-4" />
+      <div className="h-3 w-20 rounded-full bg-white/10 animate-pulse mb-3" />
+      <div className="h-12 w-28 rounded-lg bg-white/10 animate-pulse mb-2" />
+      <div className="h-2 w-16 rounded-full bg-white/10 animate-pulse" />
     </div>
   )
 }
@@ -86,48 +80,52 @@ interface MetricCardProps {
   subtitle2?: string
   subtitle2Color?: string
   accentColor: string
-  glowBg?: string
+  glowColor: string
 }
 
-function MetricCard({ icon, label, value, unit, subtitle, subtitle2, subtitle2Color, accentColor, glowBg }: MetricCardProps) {
+function MetricCard({ icon, label, value, unit, subtitle, subtitle2, subtitle2Color, accentColor, glowColor }: MetricCardProps) {
   return (
-    <div
-      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-6 min-h-[120px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1 bg-card border border-border"
-      style={{
-        borderTop: `3px solid ${accentColor}`,
-      }}
-    >
-      {/* Glow background on hover */}
+    <div className="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl bg-[#0d0d15] border border-white/10 p-4 sm:p-6 min-h-[160px] sm:min-h-[180px] transition-all duration-500 hover:border-[#a3e635]/30 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#a3e635]/5">
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent" />
+      
+      {/* Hover glow effect */}
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(circle at 50% 20%, ${glowBg || "rgba(56,189,248,0.08)"}, transparent 70%)`,
+          background: `radial-gradient(circle at 50% 30%, ${glowColor}, transparent 70%)`,
         }}
+      />
+      
+      {/* Top accent line */}
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 h-1 w-16 rounded-b-full transition-all duration-300 group-hover:w-24"
+        style={{ backgroundColor: accentColor }}
       />
 
       {/* Icon */}
-      <div className="relative mb-1 sm:mb-3" style={{ color: accentColor }}>
+      <div 
+        className="relative mb-3 p-2.5 rounded-xl transition-all duration-300 group-hover:scale-110"
+        style={{ color: accentColor, backgroundColor: `${accentColor}15` }}
+      >
         {icon}
       </div>
 
       {/* Label */}
-      <span
-        className="relative text-[0.55rem] sm:text-[0.65rem] font-semibold tracking-[0.12em] sm:tracking-[0.15em] uppercase"
-        style={{ color: "rgba(139,164,189,0.7)" }}
-      >
+      <span className="relative text-[0.65rem] sm:text-xs font-bold tracking-[0.2em] uppercase text-white/40 mb-2">
         {label}
       </span>
 
       {/* Value */}
-      <div className="relative mt-0.5 sm:mt-2 flex items-baseline gap-0.5 sm:gap-1">
+      <div className="relative flex items-baseline gap-1">
         <span
-          className="text-3xl sm:text-[3rem] font-extrabold leading-none text-foreground"
+          className="text-4xl sm:text-5xl font-black leading-none text-white transition-all duration-300 group-hover:scale-105"
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {value}
         </span>
         {unit && (
-          <span className="text-base sm:text-xl font-semibold text-muted-foreground opacity-50">
+          <span className="text-lg sm:text-xl font-bold text-white/30">
             {unit}
           </span>
         )}
@@ -135,16 +133,19 @@ function MetricCard({ icon, label, value, unit, subtitle, subtitle2, subtitle2Co
 
       {/* Subtitle */}
       {subtitle && (
-        <span className="relative mt-1 sm:mt-1.5 text-[0.55rem] sm:text-xs font-medium text-muted-foreground opacity-70">
+        <span className="relative mt-2 text-xs font-medium text-white/40">
           {subtitle}
         </span>
       )}
 
-      {/* Subtitle 2 */}
+      {/* Subtitle 2 - Badge */}
       {subtitle2 && (
         <span 
-          className="relative mt-0.5 text-[0.5rem] sm:text-[0.65rem] font-bold uppercase tracking-wide"
-          style={{ color: subtitle2Color || accentColor }}
+          className="relative mt-2 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider"
+          style={{ 
+            color: subtitle2Color || accentColor,
+            backgroundColor: `${subtitle2Color || accentColor}15`,
+          }}
         >
           {subtitle2}
         </span>
@@ -156,7 +157,7 @@ function MetricCard({ icon, label, value, unit, subtitle, subtitle2, subtitle2Co
 export function ForecastCards({ data, loading }: ForecastCardsProps) {
   if (loading || !data) {
     return (
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
@@ -166,38 +167,37 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
   }
 
   const windDir = degToCompass(data.currentWindDir)
-  const heightColors = getHeightColor(data.currentHeight)
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <MetricCard
-        icon={<WaveIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
+        icon={<WaveIcon className="h-6 w-6 sm:h-7 sm:w-7" />}
         label={CARD_THEMES.altura.label}
         value={formatNum(data.currentHeight, 1)}
         unit="m"
         accentColor={CARD_THEMES.altura.accent}
-        glowBg="rgba(56,189,248,0.1)"
+        glowColor={CARD_THEMES.altura.glow}
       />
 
       <MetricCard
-        icon={<TimerIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
+        icon={<TimerIcon className="h-6 w-6 sm:h-7 sm:w-7" />}
         label={CARD_THEMES.periodo.label}
         value={formatNum(data.currentPeriod, 0)}
         unit="s"
         accentColor={CARD_THEMES.periodo.accent}
-        glowBg="rgba(96,165,250,0.1)"
+        glowColor={CARD_THEMES.periodo.glow}
       />
 
       <MetricCard
-        icon={<CompassIcon className="h-5 w-5 sm:h-8 sm:w-8" rotation={data.currentDirection} />}
+        icon={<CompassIcon className="h-6 w-6 sm:h-7 sm:w-7" rotation={data.currentDirection} />}
         label={CARD_THEMES.direcao.label}
         value={data.currentDirectionCompass}
-        accentColor="#22d3ee"
-        glowBg="transparent"
+        accentColor={CARD_THEMES.direcao.accent}
+        glowColor={CARD_THEMES.direcao.glow}
       />
 
       <MetricCard
-        icon={<WindIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
+        icon={<WindIcon className="h-6 w-6 sm:h-7 sm:w-7" />}
         label={CARD_THEMES.vento.label}
         value={`${Math.round(data.currentWindSpeed)}`}
         unit="km/h"
@@ -205,7 +205,7 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
         subtitle2={`${data.currentWindType} ${data.currentWindIntensity}`}
         subtitle2Color={data.currentWindColor}
         accentColor={data.currentWindColor}
-        glowBg={data.currentWindColor === "#ef4444" ? "rgba(239,68,68,0.1)" : data.currentWindColor === "#f59e0b" ? "rgba(245,158,11,0.1)" : "rgba(52,211,153,0.1)"}
+        glowColor={`${data.currentWindColor}25`}
       />
     </div>
   )

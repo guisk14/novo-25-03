@@ -4,75 +4,75 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #121214;
-  --foreground: #f4f4f5;
-  --card: rgba(39, 39, 42, 0.6);
-  --card-foreground: #f4f4f5;
-  --popover: #18181b;
-  --popover-foreground: #f4f4f5;
-  --primary: #38bdf8;
-  --primary-foreground: #121214;
-  --secondary: rgba(39, 39, 42, 0.8);
-  --secondary-foreground: #f4f4f5;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #38bdf8;
-  --accent-foreground: #121214;
-  --destructive: #ef4444;
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+  --card: rgba(20, 20, 30, 0.8);
+  --card-foreground: #ffffff;
+  --popover: #141418;
+  --popover-foreground: #ffffff;
+  --primary: #a3e635;
+  --primary-foreground: #0a0a0f;
+  --secondary: rgba(30, 30, 45, 0.9);
+  --secondary-foreground: #ffffff;
+  --muted: #404050;
+  --muted-foreground: #b0b0c0;
+  --accent: #a3e635;
+  --accent-foreground: #0a0a0f;
+  --destructive: #ff5555;
   --destructive-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #38bdf8;
-  --chart-1: #38bdf8;
-  --chart-2: #f43f5e;
-  --chart-3: #a1a1aa;
-  --chart-4: #10b981;
-  --chart-5: #f59e0b;
+  --border: rgba(163, 230, 53, 0.1);
+  --input: rgba(163, 230, 53, 0.08);
+  --ring: #a3e635;
+  --chart-1: #a3e635;
+  --chart-2: #ff6b9d;
+  --chart-3: #b0b0c0;
+  --chart-4: #20d9a3;
+  --chart-5: #ffa500;
   --radius: 0.75rem;
-  --sidebar: #18181b;
-  --sidebar-foreground: #f4f4f5;
-  --sidebar-primary: #38bdf8;
-  --sidebar-primary-foreground: #121214;
-  --sidebar-accent: #27272a;
-  --sidebar-accent-foreground: #f4f4f5;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #38bdf8;
+  --sidebar: #141418;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #a3e635;
+  --sidebar-primary-foreground: #0a0a0f;
+  --sidebar-accent: #2a2a3a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(163, 230, 53, 0.1);
+  --sidebar-ring: #a3e635;
 }
 
 /* Light theme */
 .light {
-  --background: #f0f6ff;
-  --foreground: #0f172a;
-  --card: rgba(255, 255, 255, 0.85);
-  --card-foreground: #0f172a;
+  --background: #fafbfc;
+  --foreground: #0a0e27;
+  --card: #ffffff;
+  --card-foreground: #0a0e27;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #0284c7;
-  --primary-foreground: #ffffff;
-  --secondary: rgba(226, 232, 240, 0.9);
-  --secondary-foreground: #0f172a;
-  --muted: #e2e8f0;
-  --muted-foreground: #475569;
-  --accent: #0284c7;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
+  --popover-foreground: #0a0e27;
+  --primary: #a3e635;
+  --primary-foreground: #0a0a0f;
+  --secondary: #f3f5f8;
+  --secondary-foreground: #0a0e27;
+  --muted: #e5ecf1;
+  --muted-foreground: #4a5568;
+  --accent: #a3e635;
+  --accent-foreground: #0a0a0f;
+  --destructive: #d32f2f;
   --destructive-foreground: #ffffff;
-  --border: rgba(15, 23, 42, 0.1);
-  --input: rgba(15, 23, 42, 0.08);
-  --ring: #0284c7;
-  --chart-1: #0284c7;
-  --chart-2: #f43f5e;
-  --chart-3: #64748b;
-  --chart-4: #10b981;
-  --chart-5: #f59e0b;
+  --border: rgba(10, 14, 39, 0.15);
+  --input: rgba(10, 14, 39, 0.08);
+  --ring: #a3e635;
+  --chart-1: #a3e635;
+  --chart-2: #d32f2f;
+  --chart-3: #4a5568;
+  --chart-4: #00a86b;
+  --chart-5: #ff8c00;
   --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #0284c7;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e2e8f0;
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: rgba(15, 23, 42, 0.1);
-  --sidebar-ring: #0284c7;
+  --sidebar-foreground: #0a0e27;
+  --sidebar-primary: #a3e635;
+  --sidebar-primary-foreground: #0a0a0f;
+  --sidebar-accent: #f3f5f8;
+  --sidebar-accent-foreground: #0a0e27;
+  --sidebar-border: rgba(10, 14, 39, 0.15);
+  --sidebar-ring: #a3e635;
 }
 
 @theme inline {
@@ -120,21 +120,8 @@
   * {
     @apply border-border outline-ring/50;
   }
-
-  html, body {
-    overflow-x: hidden;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  
   body {
     @apply bg-background text-foreground;
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-y: auto !important;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
