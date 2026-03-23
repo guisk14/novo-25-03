@@ -175,7 +175,7 @@ export function SurfMap({ beach, cityName, data }: SurfMapProps) {
           Visao do Pico (Satelite)
         </h3>
       </div>
-      <div ref={mapRef} className="w-full h-[420px] min-h-[420px] lg:h-full" />
+      <div ref={mapRef} className="h-[400px] lg:h-full min-h-[400px]" />
       <style jsx global>{`
         @keyframes pulse-ring {
           0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
