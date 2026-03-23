@@ -240,16 +240,24 @@ export function Topbar() {
               {/* Nav items */}
               <ul className="py-1.5">
                 <li>
-                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors">
+                  <Link 
+                    href="/perfil" 
+                    onClick={() => setUserOpen(false)}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors"
+                  >
                     <User className="h-4 w-4 text-muted-foreground" />
                     Perfil
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors">
+                  <Link 
+                    href="/configuracoes" 
+                    onClick={() => setUserOpen(false)}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/8 transition-colors"
+                  >
                     <Settings className="h-4 w-4 text-muted-foreground" />
                     Configurações
-                  </button>
+                  </Link>
                 </li>
               </ul>
 
