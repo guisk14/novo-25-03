@@ -98,6 +98,8 @@ export function ProfileHeader({ isEditing, onEditToggle }: ProfileHeaderProps) {
         )}
       </div>
 
+      </div>
+
       {/* Settings button - top right corner */}
       <Link
         href="/configuracoes"
