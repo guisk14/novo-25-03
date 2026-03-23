@@ -1,6 +1,6 @@
 "use client"
 
-import { formatNum, degToCompass } from "@/lib/surf-utils"
+import { degToCompass, formatNum } from "@/lib/surf-utils"
 import type { ForecastData } from "@/lib/surf-utils"
 
 interface ForecastCardsProps {
@@ -52,104 +52,79 @@ function CompassIcon({ className, rotation }: { className?: string; rotation: nu
   )
 }
 
-function getHeightColor(height: number): { accent: string; bg: string; glow: string } {
-  if (height >= 3) return { accent: "#ef4444", bg: "rgba(239,68,68,0.08)", glow: "rgba(239,68,68,0.15)" }
-  if (height >= 2) return { accent: "#f59e0b", bg: "rgba(245,158,11,0.08)", glow: "rgba(245,158,11,0.15)" }
-  if (height >= 1) return { accent: "#22c55e", bg: "rgba(34,197,94,0.08)", glow: "rgba(34,197,94,0.15)" }
-  if (height >= 0.5) return { accent: "#38bdf8", bg: "rgba(56,189,248,0.08)", glow: "rgba(56,189,248,0.15)" }
-  return { accent: "#94a3b8", bg: "rgba(148,163,184,0.06)", glow: "rgba(148,163,184,0.1)" }
-}
-
-const CARD_THEMES = {
-  altura: { accent: "#38bdf8", label: "Altura" },
-  periodo: { accent: "#60a5fa", label: "Periodo" },
-  direcao: { accent: "transparent", label: "Dir. Onda" },
-  vento: { accent: "#34d399", label: "Vento" },
-}
-
-function CardSkeleton() {
+function CardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl bg-card p-6 min-h-[160px] border border-border">
-      <div className="h-8 w-8 rounded-full bg-muted animate-pulse mb-3" />
-      <div className="h-3 w-16 rounded bg-muted animate-pulse mb-3" />
-      <div className="h-10 w-24 rounded bg-muted animate-pulse mb-2" />
+    <div className="group relative min-h-[146px] overflow-hidden rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(19,23,19,0.96),rgba(10,13,10,0.98))] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.28)] transition-transform duration-300 hover:-translate-y-1 sm:min-h-[188px] sm:p-6">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.16),transparent)]" />
+      <div className="pointer-events-none absolute right-[-20%] top-[-20%] h-40 w-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+      {children}
     </div>
   )
 }
 
-interface MetricCardProps {
+function MetricCard({
+  icon,
+  label,
+  value,
+  unit,
+  subtitle,
+  badge,
+  badgeColor,
+  accentColor,
+}: {
   icon: React.ReactNode
   label: string
   value: string
   unit?: string
   subtitle?: string
-  subtitle2?: string
-  subtitle2Color?: string
+  badge?: string
+  badgeColor?: string
   accentColor: string
-  glowBg?: string
-}
-
-function MetricCard({ icon, label, value, unit, subtitle, subtitle2, subtitle2Color, accentColor, glowBg }: MetricCardProps) {
+}) {
   return (
-    <div
-      className="group relative flex flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl p-3 sm:p-6 min-h-[120px] sm:min-h-[170px] transition-all duration-300 ease-out hover:-translate-y-1 bg-card border border-border"
-      style={{
-        borderTop: `3px solid ${accentColor}`,
-      }}
-    >
-      {/* Glow background on hover */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background: `radial-gradient(circle at 50% 20%, ${glowBg || "rgba(56,189,248,0.08)"}, transparent 70%)`,
-        }}
-      />
-
-      {/* Icon */}
-      <div className="relative mb-1 sm:mb-3" style={{ color: accentColor }}>
-        {icon}
+    <CardShell>
+      <div className="mb-6 flex items-start justify-between gap-3">
+        <div className="rounded-2xl border border-white/8 bg-white/4 p-3" style={{ color: accentColor }}>
+          {icon}
+        </div>
+        <span className="rounded-full border border-white/8 bg-white/4 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/48">
+          {label}
+        </span>
       </div>
 
-      {/* Label */}
-      <span
-        className="relative text-[0.55rem] sm:text-[0.65rem] font-semibold tracking-[0.12em] sm:tracking-[0.15em] uppercase"
-        style={{ color: "rgba(139,164,189,0.7)" }}
-      >
-        {label}
-      </span>
-
-      {/* Value */}
-      <div className="relative mt-0.5 sm:mt-2 flex items-baseline gap-0.5 sm:gap-1">
-        <span
-          className="text-3xl sm:text-[3rem] font-extrabold leading-none text-foreground"
-          style={{ fontVariantNumeric: "tabular-nums" }}
-        >
+      <div className="flex items-end gap-1">
+        <span className="font-display text-4xl font-bold leading-none text-white sm:text-[3.25rem]" style={{ fontVariantNumeric: "tabular-nums" }}>
           {value}
         </span>
-        {unit && (
-          <span className="text-base sm:text-xl font-semibold text-muted-foreground opacity-50">
-            {unit}
-          </span>
-        )}
+        {unit && <span className="pb-1 text-base font-semibold text-white/38 sm:text-lg">{unit}</span>}
       </div>
 
-      {/* Subtitle */}
-      {subtitle && (
-        <span className="relative mt-1 sm:mt-1.5 text-[0.55rem] sm:text-xs font-medium text-muted-foreground opacity-70">
-          {subtitle}
-        </span>
+      {subtitle && <p className="mt-4 text-sm leading-6 text-white/54">{subtitle}</p>}
+
+      {badge && (
+        <div className="mt-4">
+          <span
+            className="inline-flex rounded-full border border-white/8 bg-white/4 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]"
+            style={{ color: badgeColor || accentColor }}
+          >
+            {badge}
+          </span>
+        </div>
       )}
 
-      {/* Subtitle 2 */}
-      {subtitle2 && (
-        <span 
-          className="relative mt-0.5 text-[0.5rem] sm:text-[0.65rem] font-bold uppercase tracking-wide"
-          style={{ color: subtitle2Color || accentColor }}
-        >
-          {subtitle2}
-        </span>
-      )}
-    </div>
+      <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent 72%)` }} />
+    </CardShell>
+  )
+}
+
+function CardSkeleton() {
+  return (
+    <CardShell>
+      <div className="mb-6 h-12 w-12 animate-pulse rounded-2xl bg-white/8" />
+      <div className="mb-3 h-3 w-20 animate-pulse rounded bg-white/8" />
+      <div className="mb-3 h-12 w-24 animate-pulse rounded bg-white/8" />
+      <div className="h-2 w-32 animate-pulse rounded bg-white/8" />
+    </CardShell>
   )
 }
 
@@ -166,46 +141,44 @@ export function ForecastCards({ data, loading }: ForecastCardsProps) {
   }
 
   const windDir = degToCompass(data.currentWindDir)
-  const heightColors = getHeightColor(data.currentHeight)
 
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <MetricCard
-        icon={<WaveIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
-        label={CARD_THEMES.altura.label}
+        icon={<WaveIcon className="h-5 w-5 sm:h-7 sm:w-7" />}
+        label="Onda"
         value={formatNum(data.currentHeight, 1)}
         unit="m"
-        accentColor={CARD_THEMES.altura.accent}
-        glowBg="rgba(56,189,248,0.1)"
+        subtitle="Altura da onda no pico agora."
+        accentColor="#5ed7ff"
       />
 
       <MetricCard
-        icon={<TimerIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
-        label={CARD_THEMES.periodo.label}
+        icon={<TimerIcon className="h-5 w-5 sm:h-7 sm:w-7" />}
+        label="Periodo"
         value={formatNum(data.currentPeriod, 0)}
         unit="s"
-        accentColor={CARD_THEMES.periodo.accent}
-        glowBg="rgba(96,165,250,0.1)"
+        subtitle="Tempo entre series e energia."
+        accentColor="#e9ffb5"
       />
 
       <MetricCard
-        icon={<CompassIcon className="h-5 w-5 sm:h-8 sm:w-8" rotation={data.currentDirection} />}
-        label={CARD_THEMES.direcao.label}
+        icon={<CompassIcon className="h-5 w-5 sm:h-7 sm:w-7" rotation={data.currentDirection} />}
+        label="Direcao"
         value={data.currentDirectionCompass}
-        accentColor="#22d3ee"
-        glowBg="transparent"
+        subtitle="Entrada principal da ondulacao."
+        accentColor="#5ed7ff"
       />
 
       <MetricCard
-        icon={<WindIcon className="h-5 w-5 sm:h-8 sm:w-8" />}
-        label={CARD_THEMES.vento.label}
-        value={`${Math.round(data.currentWindSpeed)}`}
+        icon={<WindIcon className="h-5 w-5 sm:h-7 sm:w-7" />}
+        label="Vento"
+        value={String(Math.round(data.currentWindSpeed))}
         unit="km/h"
-        subtitle={`${windDir} · Raj. ${Math.round(data.currentWindGust)} km`}
-        subtitle2={`${data.currentWindType} ${data.currentWindIntensity}`}
-        subtitle2Color={data.currentWindColor}
+        subtitle={`${windDir} - Raj. ${Math.round(data.currentWindGust)} km`}
+        badge={`${data.currentWindType} ${data.currentWindIntensity}`}
+        badgeColor={data.currentWindColor}
         accentColor={data.currentWindColor}
-        glowBg={data.currentWindColor === "#ef4444" ? "rgba(239,68,68,0.1)" : data.currentWindColor === "#f59e0b" ? "rgba(245,158,11,0.1)" : "rgba(52,211,153,0.1)"}
       />
     </div>
   )
