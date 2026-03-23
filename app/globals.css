@@ -117,11 +117,17 @@
 }
 
 @layer base {
+  html {
+    @apply h-full;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply min-h-full bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
