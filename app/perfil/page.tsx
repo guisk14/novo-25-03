@@ -7,6 +7,7 @@ import { ProfileHeader } from '@/components/profile-header'
 import { ProfileStats } from '@/components/profile-stats'
 import { ProfileSessions } from '@/components/profile-sessions'
 import { Settings, Edit2, LogOut } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
@@ -36,10 +37,10 @@ export default function ProfilePage() {
               <Edit2 className="h-4 w-4" />
               Editar Perfil
             </button>
-            <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border bg-card text-foreground font-semibold hover:bg-secondary transition-colors">
+            <Link href="/configuracoes" className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border bg-card text-foreground font-semibold hover:bg-secondary transition-colors">
               <Settings className="h-4 w-4" />
               Configurações
-            </button>
+            </Link>
             <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive font-semibold hover:bg-destructive/20 transition-colors ml-auto sm:ml-0">
               <LogOut className="h-4 w-4" />
               Sair

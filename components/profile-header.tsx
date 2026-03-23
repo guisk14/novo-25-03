@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, MapPin, Calendar, Trophy } from 'lucide-react'
+import Link from 'next/link'
+import { Mail, MapPin, Calendar, Trophy, Settings } from 'lucide-react'
 
 interface ProfileHeaderProps {
   isEditing: boolean
@@ -23,7 +24,8 @@ export function ProfileHeader({ isEditing, onEditToggle }: ProfileHeaderProps) {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 items-start md:items-end">
+    <div className="flex flex-col md:flex-row gap-8 items-start md:items-end justify-between">
+      <div className="flex flex-col md:flex-row gap-8 items-start md:items-end flex-1">
       {/* Avatar */}
       <div className="relative">
         <div className="h-40 w-40 rounded-2xl bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center text-7xl font-black text-primary-foreground shadow-lg ring-4 ring-border">
@@ -95,6 +97,15 @@ export function ProfileHeader({ isEditing, onEditToggle }: ProfileHeaderProps) {
           </>
         )}
       </div>
+
+      {/* Settings button - top right corner */}
+      <Link
+        href="/configuracoes"
+        className="flex items-center justify-center gap-2 h-12 w-12 rounded-lg bg-secondary border border-border hover:border-primary hover:bg-secondary/80 transition-all duration-200 group"
+        title="Configurações"
+      >
+        <Settings className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+      </Link>
     </div>
   )
 }
